@@ -8,6 +8,10 @@ Inspired by GitHub Spec Kit's Specify CLI.
 
 import os
 import sys
+import pathlib
+
+# Add the current directory to the path to allow relative imports
+sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
 try:
     import click
@@ -53,7 +57,9 @@ def cli():
 @cli.command()
 def detect():
     """Detect available AI agents on system"""
-    support = AgentSupport(os.getcwd())
+    # Set company_dir to the 'company' subdirectory where the registry is located
+    company_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+    support = AgentSupport(company_dir)
     available = support.detect_available_agents()
 
     print("\n📊 AI Agent Detection Report\n")
@@ -99,7 +105,9 @@ def _load_scripts(scripts_dir):
 @click.option("--project", "-p", help="Project context to use for initialization")
 def init(agent, init_all, script, project):
     """Initialize super-agents for AI agents with comprehensive context files"""
-    support = AgentSupport(os.getcwd())
+    # Set company_dir to the 'company' subdirectory where the registry is located
+    company_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+    support = AgentSupport(company_dir)
     ui = SuperAgentsUI() if HAS_RICH else None
 
     if not agent and not init_all:
@@ -233,7 +241,9 @@ def init(agent, init_all, script, project):
 )
 def context(agent):
     """Create unified context file for an agent"""
-    support = AgentSupport(os.getcwd())
+    # Set company_dir to the 'company' subdirectory where the registry is located
+    company_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+    support = AgentSupport(company_dir)
 
     if support.create_agent_context_file(agent):
         click.secho(f"✓ Context file created for {agent}", fg="green")
@@ -245,7 +255,9 @@ def context(agent):
 @cli.command()
 def list_agents():
     """List all super-agents in the system"""
-    support = AgentSupport(os.getcwd())
+    # Set company_dir to the 'company' subdirectory where the registry is located
+    company_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+    support = AgentSupport(company_dir)
     agent_specs = support.load_agent_specs()
 
     if not agent_specs:
@@ -284,7 +296,9 @@ def list_agents():
 @click.option("--agent", "-a", required=True, help="Agent to show help for")
 def show_agent(agent):
     """Show detailed information about a super-agent"""
-    support = AgentSupport(os.getcwd())
+    # Set company_dir to the 'company' subdirectory where the registry is located
+    company_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+    support = AgentSupport(company_dir)
     agent_specs = support.load_agent_specs()
 
     if agent not in agent_specs:
@@ -332,7 +346,9 @@ def show_agent(agent):
 @cli.command()
 def status():
     """Show system status"""
-    support = AgentSupport(os.getcwd())
+    # Set company_dir to the 'company' subdirectory where the registry is located
+    company_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+    support = AgentSupport(company_dir)
 
     print("\n📊 System Status\n")
     print("=" * 60)
@@ -363,15 +379,20 @@ def status():
 @cli.command()
 def check():
     """Check system prerequisites and configuration"""
-    support = AgentSupport(os.getcwd())
+    # Set company_dir to the 'company' subdirectory where the registry is located
+    company_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+    support = AgentSupport(company_dir)
 
     print("\n✓ System Check\n")
     print("=" * 60)
 
     # Check registry
     try:
-        support.load_registry()
-        click.secho("✓ Agent registry loaded", fg="green")
+        # Access the already loaded registry
+        if support.registry:
+            click.secho("✓ Agent registry loaded", fg="green")
+        else:
+            click.secho("✗ Agent registry not loaded", fg="red")
     except Exception as e:
         click.secho(f"✗ Agent registry error: {e}", fg="red")
 
@@ -404,7 +425,7 @@ if __name__ == "__main__":
     deps_to_install = []
     
     try:
-        import tabulate
+        from tabulate import tabulate
     except ImportError:
         deps_to_install.append("tabulate")
     
