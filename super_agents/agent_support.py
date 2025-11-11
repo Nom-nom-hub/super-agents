@@ -8,6 +8,7 @@ Inspired by GitHub Spec Kit's agent-agnostic design pattern.
 
 import os
 import shutil
+import sys
 from typing import Dict, List, Optional
 
 import yaml
@@ -17,9 +18,6 @@ try:
     from .utils.structured_logging import get_logger
 except ImportError:
     # For development/standalone execution
-    import os
-    import sys
-
     super_agents_dir = os.path.dirname(os.path.abspath(__file__))
     sys.path.insert(0, os.path.join(super_agents_dir, "utils"))
     from structured_logging import get_logger
