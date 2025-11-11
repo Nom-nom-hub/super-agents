@@ -5,13 +5,13 @@
 The autonomous spec regeneration system has been fully integrated into the runtime. Every agent execution now automatically:
 
 1. **Captures execution telemetry** via ExecutionTracker
-2. **Analyzes patterns** via ReflectionAgent
-3. **Updates agent specs** via AutonomousSpecManager
-4. **Broadcasts changes** to delegation system
+1. **Analyzes patterns** via ReflectionAgent
+1. **Updates agent specs** via AutonomousSpecManager
+1. **Broadcasts changes** to delegation system
 
 This guide explains how to integrate the learning system into your agent runners.
 
----
+______________________________________________________________________
 
 ## Quick Start
 
@@ -32,6 +32,7 @@ orchestrator.run_demo_workflow()
 ```
 
 The orchestrator:
+
 - Initializes `AgentSupport` with learning components
 - Passes it to all Agent instances
 - Automatically calls `track_execution_start()` at task start
@@ -73,7 +74,7 @@ if result["success"]:
         print(f"  Specialization: {result['learnings']['specialization']}")
 ```
 
----
+______________________________________________________________________
 
 ## Integration Points
 
@@ -143,7 +144,7 @@ result, learning_result = execute_with_learning(
 )
 ```
 
----
+______________________________________________________________________
 
 ## Component Architecture
 
@@ -181,7 +182,7 @@ result, learning_result = execute_with_learning(
                           └─ Refresh delegation prompts
 ```
 
----
+______________________________________________________________________
 
 ## Data Flow: Complete Example
 
@@ -242,7 +243,7 @@ Task → Agent.execute_task() → [No tracking] → [Spec never updates]
    └─ Agent "knows" about async/await patterns from v2 spec
 ```
 
----
+______________________________________________________________________
 
 ## API Reference
 
@@ -253,31 +254,38 @@ Main integration point for learning system.
 #### Methods
 
 ##### `is_available() → bool`
+
 Check if learning system is initialized.
 
 ##### `pre_execute(agent_id: str, task_description: str) → Optional[str]`
+
 Start tracking execution. Call before task execution.
 
 **Returns:** Execution ID or None
 
 **Example:**
+
 ```python
 exec_id = learning.pre_execute("backend_engineer", "Design REST API")
 ```
 
 ##### `track_tool(tool_name: str, context: Optional[str] = None)`
+
 Track tool/capability usage.
 
 **Example:**
+
 ```python
 learning.track_tool("FastAPI", "Used for REST API endpoints")
 learning.track_tool("PostgreSQL", "Used for data storage")
 ```
 
 ##### `track_decision(decision: str, rationale: Optional[str] = None)`
+
 Track decision made during execution.
 
 **Example:**
+
 ```python
 learning.track_decision(
     "Use async/await for I/O operations",
@@ -286,9 +294,11 @@ learning.track_decision(
 ```
 
 ##### `track_blocker(blocker: str, resolution: Optional[str] = None)`
+
 Track obstacles encountered.
 
 **Example:**
+
 ```python
 learning.track_blocker(
     "Connection pool sizing",
@@ -297,24 +307,29 @@ learning.track_blocker(
 ```
 
 ##### `track_output(output_path: str, description: Optional[str] = None)`
+
 Track files/artifacts created.
 
 **Example:**
+
 ```python
 learning.track_output("api/main.py", "Main API implementation (450 lines)")
 learning.track_output("api/models.py", "SQLAlchemy models")
 ```
 
 ##### `track_metrics(**kwargs)`
+
 Track quality metrics.
 
 **Metrics:**
+
 - `test_coverage`: 0-100 (percentage)
 - `code_quality_score`: 0-10 (float)
 - `performance_latency_ms`: milliseconds
 - `lines_of_code`: count
 
 **Example:**
+
 ```python
 learning.track_metrics(
     test_coverage=92,
@@ -325,9 +340,11 @@ learning.track_metrics(
 ```
 
 ##### `post_execute(agent_id: str, status: str = "completed", result: Optional[Dict] = None) → Dict`
+
 End execution and trigger learning cycle.
 
 **Returns:** Learning result with:
+
 - `success`: bool
 - `agent_id`: str
 - `spec_version`: int
@@ -336,6 +353,7 @@ End execution and trigger learning cycle.
 - `governance_note`: Optional[str]
 
 **Example:**
+
 ```python
 result = learning.post_execute("backend_engineer")
 if result["success"]:
@@ -344,9 +362,11 @@ if result["success"]:
 ```
 
 ##### `get_agent_stats(agent_id: str) → Dict`
+
 Get execution statistics.
 
 **Example:**
+
 ```python
 stats = learning.get_agent_stats("backend_engineer")
 print(f"Total executions: {stats['total_executions']}")
@@ -354,9 +374,11 @@ print(f"Most used tools: {list(stats['tools_frequency'].keys())[:5]}")
 ```
 
 ##### `get_agent_evolution(agent_id: str) → Dict`
+
 Get evolution summary across versions.
 
 **Example:**
+
 ```python
 evolution = learning.get_agent_evolution("backend_engineer")
 print(f"Versions: {evolution['total_versions']}")
@@ -388,7 +410,7 @@ history = support.get_spec_history(agent_id)
 diff = support.compare_spec_versions(agent_id, v1, v2)
 ```
 
----
+______________________________________________________________________
 
 ## File Structure
 
@@ -425,7 +447,7 @@ super_agents/
 └── LEARNING_INTEGRATION_GUIDE.md         (this file)
 ```
 
----
+______________________________________________________________________
 
 ## Governance & Safety
 
@@ -466,7 +488,7 @@ learning.rollback_spec("backend_engineer", target_version=3)
 # Spec restored to v3, with v5 archived
 ```
 
----
+______________________________________________________________________
 
 ## Monitoring & Analysis
 
@@ -537,7 +559,7 @@ print(f"Avg Duration: {stats['avg_duration_seconds']:.1f}s")
 print(f"Code Quality: {stats['avg_code_quality']:.1f}/10")
 ```
 
----
+______________________________________________________________________
 
 ## Integration Checklist
 
@@ -555,7 +577,7 @@ print(f"Code Quality: {stats['avg_code_quality']:.1f}/10")
 - [x] Rollback capability for bad updates
 - [x] Learning reports and audit trails
 
----
+______________________________________________________________________
 
 ## Next Steps for Implementation
 
@@ -570,6 +592,7 @@ python3 agent_orchestrator.py
 ### 2. Integrate with External Agents
 
 Use `LearningIntegration` in:
+
 - Claude integration
 - Copilot integration
 - Custom agent runners
@@ -582,6 +605,7 @@ Check `super_agents/agents/.learning_reports/` for detailed analysis.
 ### 4. Implement Approval Workflow
 
 Current system allows updates but flags major changes. Next phase:
+
 - Create approval queue for governance review
 - Implement notification system
 - Add human approval before applying major updates
@@ -589,13 +613,14 @@ Current system allows updates but flags major changes. Next phase:
 ### 5. Build Metrics Dashboard
 
 Create dashboard showing:
+
 - Agent evolution across versions
 - Tool and capability adoption
 - Quality improvements
 - Specialization areas
 - Common blockers
 
----
+______________________________________________________________________
 
 ## Troubleshooting
 
@@ -616,9 +641,9 @@ Make sure ExecutionTracker has write permissions
 ### Specs not updating
 
 1. Verify execution completed successfully (status="completed")
-2. Check if changes meet governance thresholds
-3. Review learning_reports for analysis output
-4. Check agent_support initialization
+1. Check if changes meet governance thresholds
+1. Review learning_reports for analysis output
+1. Check agent_support initialization
 
 ### Rollback needed
 
@@ -627,7 +652,7 @@ learning.rollback_spec("agent_id", target_version=N)
 # Spec restored, intention_mapping updated, prompts regenerated
 ```
 
----
+______________________________________________________________________
 
 ## Example: Complete Integration
 
@@ -693,12 +718,13 @@ if __name__ == "__main__":
     main()
 ```
 
----
+______________________________________________________________________
 
 ## Support
 
 For issues or questions:
+
 1. Check execution logs in `super_agents/agents/.execution_logs/`
-2. Review learning reports in `super_agents/agents/.learning_reports/`
-3. Verify spec versions in `super_agents/agents/.history/`
-4. Check `intent_mapping.yaml` for specialization entries
+1. Review learning reports in `super_agents/agents/.learning_reports/`
+1. Verify spec versions in `super_agents/agents/.history/`
+1. Check `intent_mapping.yaml` for specialization entries

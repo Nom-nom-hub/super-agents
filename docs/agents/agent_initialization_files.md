@@ -7,6 +7,7 @@ When a user runs the `init` command with the CLI and selects a specific agent, t
 ## Agent-Specific Initialization Files
 
 ### Common Files (for all agents)
+
 ```
 agent_init/
 ├── agent_profile.yaml          # Agent's specific profile and configuration
@@ -30,6 +31,7 @@ agent_init/
 ### Division-Specific Files
 
 #### Executive Division (CEO, CTO, COO)
+
 ```
 agent_init/
 ├── executive/
@@ -46,6 +48,7 @@ agent_init/
 ```
 
 #### Product Division (Product Manager, UX Designer, Market Analyst)
+
 ```
 agent_init/
 ├── product/
@@ -62,6 +65,7 @@ agent_init/
 ```
 
 #### Engineering Division (Backend, Frontend, AI, DevOps, Builder Engineers)
+
 ```
 agent_init/
 ├── engineering/
@@ -78,6 +82,7 @@ agent_init/
 ```
 
 #### Quality Division (QA Engineer, Reliability Engineer)
+
 ```
 agent_init/
 ├── quality/
@@ -94,6 +99,7 @@ agent_init/
 ```
 
 #### Security Division (Security Engineer)
+
 ```
 agent_init/
 ├── security/
@@ -110,6 +116,7 @@ agent_init/
 ```
 
 #### Knowledge Division (Tech Writer, Knowledge Architect)
+
 ```
 agent_init/
 ├── documentation/
@@ -125,6 +132,7 @@ agent_init/
 ```
 
 #### Governance Division (Meta Architect)
+
 ```
 agent_init/
 ├── governance/
@@ -140,6 +148,7 @@ agent_init/
 ```
 
 #### Expansion Division
+
 ```
 agent_init/
 ├── expansion/
@@ -167,6 +176,7 @@ agent_init/
 When initializing an agent, additional context-specific files are included based on:
 
 ### 1. Current Project Context
+
 ```
 agent_init/
 └── project_context/
@@ -178,6 +188,7 @@ agent_init/
 ```
 
 ### 2. Task-Specific Context
+
 ```
 agent_init/
 └── task_context/
@@ -189,6 +200,7 @@ agent_init/
 ```
 
 ### 3. Collaboration Context
+
 ```
 agent_init/
 └── collaboration/
@@ -202,6 +214,7 @@ agent_init/
 ## Agent-Specific Configuration Examples
 
 ### Backend Engineer Configuration
+
 ```
 agent_init/
 ├── agent_profile.yaml
@@ -224,6 +237,7 @@ agent_init/
 ```
 
 ### Frontend Engineer Configuration
+
 ```
 agent_init/
 ├── agent_profile.yaml
@@ -246,6 +260,7 @@ agent_init/
 ```
 
 ### AI Engineer Configuration
+
 ```
 agent_init/
 ├── agent_profile.yaml
@@ -272,19 +287,19 @@ agent_init/
 When a user runs the CLI init command:
 
 1. **Agent Selection**: User selects the agent type via CLI
-2. **Context Identification**: System identifies relevant project and task context
-3. **File Assembly**: Relevant files are assembled into a comprehensive initialization package
-4. **Dependency Resolution**: Required dependencies are identified and prepared
-5. **Package Creation**: The agent receives a complete package with all necessary information
-6. **Validation**: The package is validated for completeness and correctness
+1. **Context Identification**: System identifies relevant project and task context
+1. **File Assembly**: Relevant files are assembled into a comprehensive initialization package
+1. **Dependency Resolution**: Required dependencies are identified and prepared
+1. **Package Creation**: The agent receives a complete package with all necessary information
+1. **Validation**: The package is validated for completeness and correctness
 
 ## Customization Options
 
 The initialization system supports customization through:
 
 1. **Project-Specific Templates**: Project-specific variations of standard files
-2. **Role-Based Permissions**: Access controls based on agent role
-3. **Dynamic Context Injection**: Runtime context information based on current state
-4. **Extensible File Structure**: Ability to add new file types as needed
+1. **Role-Based Permissions**: Access controls based on agent role
+1. **Dynamic Context Injection**: Runtime context information based on current state
+1. **Extensible File Structure**: Ability to add new file types as needed
 
 This comprehensive file structure ensures that each agent receives all necessary information to work effectively while maintaining proper context, governance, and collaboration protocols within the AICODE Labs ecosystem.

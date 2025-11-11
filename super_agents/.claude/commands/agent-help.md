@@ -44,10 +44,10 @@ Use this command to get detailed information about a specific super-agent.
 - **`tech_writer`** (Technical Writer Agent): Generate documentation, developer guides, and API references
 - **`ux_designer`** (UX/UI Designer Agent): Design interface flows and user experience artifacts
 
-
 ## Agent Properties
 
 When you query an agent, you'll get:
+
 - **ID**: Unique identifier for delegation
 - **Title**: Agent's role/title
 - **Mission**: What they're designed to do

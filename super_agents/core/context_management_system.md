@@ -7,6 +7,7 @@ The Context Management System ensures that all agents in AICODE Labs have access
 ## Core Components
 
 ### 1. Context Store
+
 The context store is a shared repository that maintains information accessible to all agents:
 
 ```
@@ -19,19 +20,23 @@ The context store is a shared repository that maintains information accessible t
 ```
 
 ### 2. Context Providers
+
 Different types of context providers supply relevant information to agents:
 
 #### Project Context Provider
+
 - Maintains project-specific information
 - Tracks project state, milestones, and requirements
 - Manages project resources and artifacts
 
 #### Agent Context Provider
+
 - Maintains each agent's specialized knowledge
 - Tracks agent capabilities and preferences
 - Manages agent-specific configurations
 
 #### Task Context Provider
+
 - Maintains information about ongoing tasks
 - Tracks dependencies and prerequisites
 - Manages task-specific resources
@@ -39,6 +44,7 @@ Different types of context providers supply relevant information to agents:
 ## Context Information Categories
 
 ### A. Project Information
+
 - Project requirements and specifications
 - Timeline and milestones
 - Resource allocation
@@ -47,6 +53,7 @@ Different types of context providers supply relevant information to agents:
 - Risk assessments
 
 ### B. Technical Information
+
 - Architecture decisions
 - Technology stack
 - API contracts
@@ -55,6 +62,7 @@ Different types of context providers supply relevant information to agents:
 - Security policies
 
 ### C. Domain Knowledge
+
 - Business domain concepts
 - Industry standards
 - Best practices
@@ -62,6 +70,7 @@ Different types of context providers supply relevant information to agents:
 - Pattern libraries
 
 ### D. Organizational Information
+
 - Agent capabilities and roles
 - Communication protocols
 - Governance policies
@@ -71,6 +80,7 @@ Different types of context providers supply relevant information to agents:
 ## Context Access Patterns
 
 ### 1. Explicit Context Request
+
 Agents can request specific context information:
 
 ```
@@ -80,6 +90,7 @@ implement user authentication API
 ```
 
 ### 2. Implicit Context Inference
+
 The system automatically provides relevant context based on task description:
 
 ```
@@ -88,6 +99,7 @@ The system automatically provides relevant context based on task description:
 ```
 
 ### 3. Context Propagation
+
 When agents complete tasks, relevant context is automatically made available to subsequent agents:
 
 ```
@@ -98,6 +110,7 @@ When agents complete tasks, relevant context is automatically made available to 
 ## Context Templates for Common Scenarios
 
 ### New Feature Development Context
+
 ```
 {
   "project": "ecommerce_platform",
@@ -128,6 +141,7 @@ When agents complete tasks, relevant context is automatically made available to 
 ```
 
 ### System Architecture Context
+
 ```
 {
   "architecture": {
@@ -155,6 +169,7 @@ When agents complete tasks, relevant context is automatically made available to 
 ```
 
 ### Quality Assurance Context
+
 ```
 {
   "test_strategy": {
@@ -185,6 +200,7 @@ When agents complete tasks, relevant context is automatically made available to 
 ## Agent Context Commands
 
 ### Context Retrieval Commands
+
 Agents can retrieve context using standardized commands:
 
 ```
@@ -202,6 +218,7 @@ perform [task]
 ```
 
 ### Context Update Commands
+
 When agents complete tasks, they can update the shared context:
 
 ```
@@ -215,18 +232,21 @@ When agents complete tasks, they can update the shared context:
 ## Context Management Best Practices
 
 ### 1. For Requesters
+
 - Be specific about which context is needed
 - Reference existing documents and artifacts
 - Clearly state project and task boundaries
 - Identify relevant stakeholders
 
 ### 2. For Agents
+
 - Request only the context you need
 - Update shared context when completing tasks
 - Maintain consistency with existing information
 - Document decisions and rationales
 
 ### 3. For Complex Tasks
+
 - Break down complex tasks with clear context transitions
 - Use context propagation to streamline information sharing
 - Maintain traceability between related tasks

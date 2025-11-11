@@ -11,8 +11,9 @@ aicode init <agent-type> [options]
 ```
 
 ### Agent Types
+
 - `ceo` - Chief Executive Officer Agent
-- `cto` - Chief Technology Officer Agent  
+- `cto` - Chief Technology Officer Agent
 - `coo` - Chief Operations Officer Agent
 - `product-manager` - Product Manager Agent
 - `ux-designer` - UX/UI Designer Agent
@@ -37,6 +38,7 @@ aicode init <agent-type> [options]
 ## Options
 
 ### Common Options
+
 - `--project <project-name>` - Specify the project context to use
 - `--task <task-description>` - Provide specific task context
 - `--output <directory>` - Specify output directory (default: ./agent-init)
@@ -45,11 +47,13 @@ aicode init <agent-type> [options]
 - `--config <config-file>` - Use custom configuration file
 
 ### Project Context Options
+
 - `--project-file <file>` - Load project context from file
 - `--create-project <name>` - Create new project context
 - `--template <template-name>` - Use specific project template
 
 ### Advanced Options
+
 - `--include-dependencies` - Include dependency files
 - `--exclude-common` - Exclude common files (use with caution)
 - `--custom-spec <file>` - Use custom agent specification file
@@ -57,6 +61,7 @@ aicode init <agent-type> [options]
 ## Example Usage
 
 ### Basic Initialization
+
 ```
 # Initialize a backend engineer with default settings
 aicode init backend-engineer
@@ -69,6 +74,7 @@ aicode init frontend-engineer --task "implement-user-dashboard" --project dashbo
 ```
 
 ### Advanced Initialization
+
 ```
 # Initialize with custom configuration
 aicode init ai-engineer --config my-ai-config.yaml --project ml-platform
@@ -85,6 +91,7 @@ aicode init devops-engineer --output /tmp/devops-agent --project ci-cd-upgrade
 The command generates agent-specific files as described in the agent_initialization_files.md document, including:
 
 ### Common Structure
+
 ```
 <output-directory>/
 ├── agent_profile.yaml
@@ -106,6 +113,7 @@ The command generates agent-specific files as described in the agent_initializat
 ```
 
 ### Agent-Specific Extensions
+
 Each agent type adds its division-specific files as outlined in the agent_initialization_files.md document.
 
 ## Context Integration
@@ -113,26 +121,29 @@ Each agent type adds its division-specific files as outlined in the agent_initia
 The system automatically integrates relevant context based on:
 
 1. **Project Context**: Information from the specified project
-2. **Task Context**: Details from the task description
-3. **Organization Context**: Company-wide standards and procedures
-4. **Dependency Context**: Related components and services
+1. **Task Context**: Details from the task description
+1. **Organization Context**: Company-wide standards and procedures
+1. **Dependency Context**: Related components and services
 
 ### Context Resolution Process
+
 1. Parse project and task specifications
-2. Match relevant organizational context
-3. Identify related components and dependencies
-4. Validate context consistency
-5. Inject context into generated files
+1. Match relevant organizational context
+1. Identify related components and dependencies
+1. Validate context consistency
+1. Inject context into generated files
 
 ## Verification and Validation
 
 ### Pre-Creation Validation
+
 - Verify agent type is valid
 - Check project context availability
 - Validate dependency requirements
 - Ensure output directory permissions
 
 ### Post-Creation Verification
+
 - Verify all required files were created
 - Check file content validity
 - Validate JSON/YAML syntax
@@ -141,6 +152,7 @@ The system automatically integrates relevant context based on:
 ## Error Handling
 
 ### Common Errors
+
 - `AGENT_NOT_FOUND`: Specified agent type does not exist
 - `PROJECT_NOT_FOUND`: Specified project context does not exist
 - `INSUFFICIENT_CONTEXT`: Required context information is missing
@@ -148,7 +160,9 @@ The system automatically integrates relevant context based on:
 - `VALIDATION_ERROR`: Generated files fail validation
 
 ### Error Resolution
+
 The system provides clear error messages with:
+
 - Specific error type and description
 - Steps to resolve the issue
 - Alternative approaches when applicable
@@ -156,8 +170,9 @@ The system provides clear error messages with:
 ## Integration with Agent System
 
 The generated files integrate seamlessly with:
+
 - Agent command interface system
-- Context management system  
+- Context management system
 - Response template system
 - Super agent coordination patterns
 
@@ -188,6 +203,7 @@ agent:
 ## Extensibility
 
 The system supports:
+
 - Custom agent types through plugin system
 - Custom project templates
 - Extended file generators

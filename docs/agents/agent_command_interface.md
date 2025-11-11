@@ -7,6 +7,7 @@ This document describes how to interact with the AICODE Labs AI agents using `/`
 ## Command Syntax
 
 Basic command format:
+
 ```
 @task [agent-type] [detailed-task-description]
 ```
@@ -16,16 +17,19 @@ Basic command format:
 ### Executive Division
 
 - `/ceo` → Use for strategic decisions, resource allocation, production sign-offs
+
   ```
   @task ceo Define quarterly strategic objectives and approve production release
   ```
 
 - `/cto` → Use for technical architecture, system design, and technology standards
+
   ```
   @task cto Architect AI systems and define technical standards for scalability
   ```
 
 - `/coo` → Use for operational workflows, resource distribution, scheduling
+
   ```
   @task coo Coordinate release process and optimize operational workflows
   ```
@@ -33,16 +37,19 @@ Basic command format:
 ### Product Division
 
 - `/product_manager` → Use for product specifications, user needs translation, market analysis
+
   ```
   @task product_manager Create product specifications from market analysis
   ```
 
 - `/ux_designer` → Use for interface design, user experience artifacts, design systems
+
   ```
   @task ux_designer Design user interface flows and create design system
   ```
 
 - `/market_analyst` → Use for market research, user insights, competitive analysis
+
   ```
   @task market_analyst Gather user insights and analyze market trends
   ```
@@ -50,26 +57,31 @@ Basic command format:
 ### Engineering Division
 
 - `/backend_engineer` → Use for APIs, databases, business logic, server architecture
+
   ```
   @task backend_engineer Design and implement REST API endpoints for user authentication
   ```
 
 - `/frontend_engineer` → Use for UI components, state management, frontend integrations
+
   ```
   @task frontend_engineer Create responsive navigation component with accessibility features
   ```
 
 - `/ai_engineer` → Use for AI models, ML pipelines, reasoning chains, NLP processing
+
   ```
   @task ai_engineer Design and implement AI model for sentiment analysis
   ```
 
 - `/devops_engineer` → Use for CI/CD, deployment, observability, infrastructure
+
   ```
   @task devops_engineer Set up CI/CD pipeline with automated testing and deployment
   ```
 
 - `/builder_engineer` → Use for spec-to-code conversion, dependency management, code generation
+
   ```
   @task builder_engineer Convert YAML specifications into runnable codebase
   ```
@@ -77,11 +89,13 @@ Basic command format:
 ### Quality Division
 
 - `/qa_engineer` → Use for testing, quality assurance, integration tests, performance validation
+
   ```
   @task qa_engineer Write comprehensive test coverage for the payment module
   ```
 
 - `/reliability_engineer` → Use for system monitoring, fault tolerance, uptime assurance
+
   ```
   @task reliability_engineer Implement monitoring and alerting for system health
   ```
@@ -96,11 +110,13 @@ Basic command format:
 ### Knowledge Division
 
 - `/tech_writer` → Use for documentation, API references, developer guides
+
   ```
   @task tech_writer Create API documentation and user guides
   ```
 
 - `/knowledge_architect` → Use for knowledge graphs, vector memory, information retrieval
+
   ```
   @task knowledge_architect Maintain knowledge graph and shared vector memory
   ```
@@ -115,26 +131,31 @@ Basic command format:
 ### Expansion Division
 
 - `/finance_agent` → Use for budget management, cost modeling, resource allocation
+
   ```
   @task finance_agent Model API consumption costs and allocate budgets
   ```
 
 - `/partnership_agent` → Use for integrations, collaborations, vendor management
+
   ```
   @task partnership_agent Integrate with external API and manage partnership
   ```
 
 - `/prompt_engineer` → Use for prompt optimization, A/B testing, performance tuning
+
   ```
   @task prompt_engineer Optimize prompts for better AI agent performance
   ```
 
 - `/research_agent` → Use for model research, technology scanning, innovation tracking
+
   ```
   @task research_agent Research new AI models and evaluate their applicability
   ```
 
 - `/ops_automator` → Use for process automation, data sync, report generation
+
   ```
   @task ops_automator Automate daily maintenance and reporting tasks
   ```
@@ -142,6 +163,7 @@ Basic command format:
 ## Best Practices for Agent Commands
 
 ### 1. Provide Sufficient Context
+
 Always include relevant context for the agent to perform the task effectively:
 
 ```
@@ -149,6 +171,7 @@ Always include relevant context for the agent to perform the task effectively:
 ```
 
 ### 2. Be Specific About Requirements
+
 Include specific requirements, constraints, or standards:
 
 ```
@@ -156,6 +179,7 @@ Include specific requirements, constraints, or standards:
 ```
 
 ### 3. Reference Existing Artifacts
+
 When applicable, reference existing files, documents, or specifications:
 
 ```
@@ -163,6 +187,7 @@ When applicable, reference existing files, documents, or specifications:
 ```
 
 ### 4. Chain Related Tasks
+
 For complex workflows, chain related tasks across multiple agents:
 
 ```
@@ -173,6 +198,7 @@ For complex workflows, chain related tasks across multiple agents:
 ```
 
 ### 5. Leverage Agent Collaboration
+
 Some tasks require multiple agents to work together:
 
 ```
@@ -185,6 +211,7 @@ Some tasks require multiple agents to work together:
 ## Example Workflows
 
 ### Full Product Development Cycle
+
 ```
 @task market_analyst Conduct market research for new product feature
 @task product_manager Create product specifications based on market insights
@@ -201,6 +228,7 @@ Some tasks require multiple agents to work together:
 ```
 
 ### Technical Architecture Design
+
 ```
 @task cto Define technical architecture for microservices approach
 @task security_engineer Design security framework for the architecture
@@ -215,17 +243,17 @@ Some tasks require multiple agents to work together:
 When using agent commands, ensure that:
 
 1. The agent type matches the task requirements
-2. Sufficient context is provided for successful completion
-3. Dependencies between tasks are properly ordered
-4. Resources and artifacts referenced actually exist
-5. The task aligns with the agent's capabilities and mission
+1. Sufficient context is provided for successful completion
+1. Dependencies between tasks are properly ordered
+1. Resources and artifacts referenced actually exist
+1. The task aligns with the agent's capabilities and mission
 
 ## Troubleshooting
 
 If an agent command doesn't produce expected results:
 
 1. Verify the agent type is correct and matches the specialization
-2. Check that sufficient context and resources are provided
-3. Confirm that the task is within the agent's domain of expertise
-4. Review the agent's specific capabilities and limitations
-5. Consider breaking complex tasks into smaller, more focused commands
+1. Check that sufficient context and resources are provided
+1. Confirm that the task is within the agent's domain of expertise
+1. Review the agent's specific capabilities and limitations
+1. Consider breaking complex tasks into smaller, more focused commands

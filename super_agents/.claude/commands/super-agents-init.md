@@ -29,28 +29,34 @@ You now have access to the **AICODE Labs super-agents system**. This gives you t
 - **`tech_writer`** (Technical Writer Agent): Generate documentation, developer guides, and API references
 - **`ux_designer`** (UX/UI Designer Agent): Design interface flows and user experience artifacts
 
-
 ## How to Use Super-Agents
 
 ### List Available Agents
+
 To see all agents and their capabilities:
+
 ```
 /list-agents
 ```
 
 ### Get Agent Help
+
 To learn about a specific agent:
+
 ```
 /agent-help backend_engineer
 ```
 
 ### Delegate Tasks
+
 To assign work to a super-agent:
+
 ```
 /delegate-task agent_id: Your task description here
 ```
 
 Example:
+
 ```
 /delegate-task backend_engineer: Design a REST API for user authentication
 /delegate-task ux_designer: Create wireframes for the user dashboard
@@ -60,12 +66,14 @@ Example:
 ## Command Placeholders
 
 When delegating, you can use these patterns:
+
 - `@agent_id: task` - Synchronous delegation
 - `Background: @agent_id: task` - Asynchronous delegation
 
 ## Available Commands
 
 You have access to these super-agents commands:
+
 - `super-agents-init` - This initialization guide
 - `list-agents` - View all available agents
 - `agent-help` - Get details about specific agents

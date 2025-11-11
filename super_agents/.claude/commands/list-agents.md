@@ -29,10 +29,10 @@ This command displays all available super-agents in the AICODE Labs system.
 - **`tech_writer`** (Technical Writer Agent): Generate documentation, developer guides, and API references
 - **`ux_designer`** (UX/UI Designer Agent): Design interface flows and user experience artifacts
 
-
 ## Using Agent Information
 
 Each agent has:
+
 - **ID**: Used in delegation commands
 - **Title**: Human-readable name
 - **Mission**: Primary purpose and goals
@@ -40,6 +40,7 @@ Each agent has:
 - **Inputs/Outputs**: Expected data formats
 
 To learn more about a specific agent, use:
+
 ```
 /agent-help <agent_id>
 ```

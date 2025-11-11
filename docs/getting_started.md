@@ -39,12 +39,12 @@ Select an Agent:
 
 ## Controls
 
-| Key | What It Does |
-|-----|--------------|
-| ↑ | Move up |
-| ↓ | Move down |
-| Enter | Select |
-| Ctrl+C | Cancel |
+| Key    | What It Does |
+| ------ | ------------ |
+| ↑      | Move up      |
+| ↓      | Move down    |
+| Enter  | Select       |
+| Ctrl+C | Cancel       |
 
 ## Commands
 
@@ -91,12 +91,14 @@ python3 cli.py list-agents   # List all super-agents
 
 **Logo looks weird?**
 → Your terminal might need UTF-8. Try:
+
 ```bash
 export LANG=en_US.UTF-8
 python3 cli.py init
 ```
 
 **Dependencies not installing?**
+
 ```bash
 pip3 install click rich questionary tabulate
 python3 cli.py init
@@ -108,6 +110,7 @@ python3 cli.py init
 ## Examples
 
 ### Initialize Claude with arrow keys
+
 ```
 1. Run: python3 cli.py init
 2. Press: ↓ (down arrow)
@@ -116,18 +119,20 @@ python3 cli.py init
 ```
 
 ### Quick initialization for multiple developers
+
 ```bash
 # Run once per machine
 python3 cli.py init --all --script update-agent-context
 ```
 
 ### Add to your setup script
+
 ```bash
 #!/bin/bash
 cd company
 python3 cli.py init --all
 ```
 
----
+______________________________________________________________________
 
 **Full documentation:** See `README_CLI.md` and `INIT_CLI_GUIDE.md`

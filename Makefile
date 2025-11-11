@@ -1,6 +1,6 @@
 # Makefile for Super Agents project
 
-.PHONY: install test lint format docs clean
+.PHONY: install test lint format docs clean format-markdown
 
 # Install the package in development mode
 install:
@@ -19,6 +19,10 @@ lint:
 format:
 	black super_agents/
 	ruff check --fix super_agents/
+
+# Format markdown files
+format-markdown:
+	find . -name "*.md" -exec python3 -m mdformat {} \;
 
 # Build documentation
 docs:

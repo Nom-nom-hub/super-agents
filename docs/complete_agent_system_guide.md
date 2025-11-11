@@ -7,17 +7,20 @@ This guide provides a comprehensive overview of the AICODE Labs AI agent system,
 ## System Architecture
 
 ### Organizational Structure
+
 The organization consists of 8 divisions:
+
 1. **Executive**: Strategic leadership and oversight
-2. **Product**: Market analysis and specification creation
-3. **Engineering**: Technical implementation and development
-4. **Quality**: Testing and reliability assurance
-5. **Security**: Security implementation and compliance
-6. **Knowledge**: Documentation and knowledge management
-7. **Governance**: Meta-architecture and evolution
-8. **Expansion**: Extended capabilities and research
+1. **Product**: Market analysis and specification creation
+1. **Engineering**: Technical implementation and development
+1. **Quality**: Testing and reliability assurance
+1. **Security**: Security implementation and compliance
+1. **Knowledge**: Documentation and knowledge management
+1. **Governance**: Meta-architecture and evolution
+1. **Expansion**: Extended capabilities and research
 
 ### Communication and Coordination
+
 - **Protocol**: Graph-based communication model
 - **Persistence**: Vector memory database
 - **Governance**: Human review required for production
@@ -26,6 +29,7 @@ The organization consists of 8 divisions:
 ## Using the Agent System
 
 ### Basic Command Syntax
+
 ```
 @task [agent-type] [detailed-task-description]
 ```
@@ -33,16 +37,19 @@ The organization consists of 8 divisions:
 ### Agent Categories and Use Cases
 
 #### Executive Agents
+
 - **CEO**: Strategic decisions, resource allocation, production approval
 - **CTO**: Technical architecture, standards, scalability
 - **COO**: Operations, workflows, resource distribution
 
 #### Product Agents
+
 - **Product Manager**: Specifications, requirements, user needs
 - **UX Designer**: Interfaces, user experience, design systems
 - **Market Analyst**: Insights, trends, competitive analysis
 
 #### Engineering Agents
+
 - **Backend Engineer**: APIs, databases, business logic
 - **Frontend Engineer**: UI components, state management
 - **AI Engineer**: AI models, pipelines, reasoning chains
@@ -50,20 +57,25 @@ The organization consists of 8 divisions:
 - **Builder Engineer**: Spec-to-code conversion, dependencies
 
 #### Quality Agents
+
 - **QA Engineer**: Testing, validation, quality assurance
 - **Reliability Engineer**: Monitoring, uptime, fault tolerance
 
 #### Security Agents
+
 - **Security Engineer**: Authentication, secrets, audits
 
 #### Knowledge Agents
+
 - **Tech Writer**: Documentation, guides, API references
 - **Knowledge Architect**: Knowledge graph, vector memory
 
 #### Governance Agents
+
 - **Meta Architect**: Agent specs, compliance, evolution
 
 #### Expansion Agents
+
 - **Finance Agent**: Budgets, cost modeling, resource allocation
 - **Partnership Agent**: Integrations, collaborations
 - **Prompt Engineer**: Prompt optimization, A/B testing
@@ -104,12 +116,14 @@ For complex tasks requiring multiple agents:
 ### Context Management
 
 #### Requesting Context
+
 ```
 @task [agent] With context from [document_path] and [specific_information], 
 perform [task_description]
 ```
 
 #### Providing Context Examples
+
 ```
 @task backend_engineer Using the database schema from database_schema.sql,
 the API contract from api_contracts.json, and following security policies 
@@ -117,18 +131,20 @@ from security_standards.md, implement the user management service
 ```
 
 #### Context Categories
+
 When requesting agent services, consider including:
 
 1. **Project Context**: Requirements, timeline, budget, stakeholders
-2. **Technical Context**: Architecture, technology stack, dependencies
-3. **Domain Context**: Business rules, industry standards, requirements
-4. **Organizational Context**: Processes, governance, compliance
+1. **Technical Context**: Architecture, technology stack, dependencies
+1. **Domain Context**: Business rules, industry standards, requirements
+1. **Organizational Context**: Processes, governance, compliance
 
 ## Response Expectations
 
 Different agents will respond with specialized information:
 
 ### Engineering Agents
+
 - Implementation details
 - Technical specifications
 - Code examples
@@ -136,6 +152,7 @@ Different agents will respond with specialized information:
 - Performance considerations
 
 ### Product Agents
+
 - User needs analysis
 - Feature specifications
 - Market positioning
@@ -143,6 +160,7 @@ Different agents will respond with specialized information:
 - Requirements traceability
 
 ### Executive Agents
+
 - Strategic alignment
 - Resource implications
 - Risk assessment
@@ -150,6 +168,7 @@ Different agents will respond with specialized information:
 - Approval status
 
 ### Quality Agents
+
 - Testing strategy
 - Quality metrics
 - Defect identification
@@ -159,30 +178,35 @@ Different agents will respond with specialized information:
 ## Best Practices for Agent Interaction
 
 ### 1. Be Specific
+
 - Clearly define the task
 - Identify required inputs
 - Specify desired outputs
 - Set success criteria
 
 ### 2. Provide Context
+
 - Reference existing documents
 - Specify relevant constraints
 - Identify stakeholders
 - Include timeline considerations
 
 ### 3. Consider Dependencies
+
 - Check prerequisites
 - Identify blocking items
 - Plan for integration points
 - Consider downstream impacts
 
 ### 4. Validate Outputs
+
 - Verify completion against requirements
 - Check for consistency with standards
 - Ensure proper documentation
 - Confirm integration with other components
 
 ### 5. Coordinate Complex Work
+
 - Break down complex tasks
 - Establish clear handoff points
 - Plan for parallel execution where possible
@@ -191,26 +215,30 @@ Different agents will respond with specialized information:
 ## Troubleshooting Common Issues
 
 ### Agent Not Producing Expected Results
+
 1. Verify the agent type matches the task requirements
-2. Ensure sufficient context was provided
-3. Check that resources referenced in the request exist
-4. Consider breaking the task into smaller, more focused requests
+1. Ensure sufficient context was provided
+1. Check that resources referenced in the request exist
+1. Consider breaking the task into smaller, more focused requests
 
 ### Coordination Problems
+
 1. Check that dependencies are properly established
-2. Verify that required documents/artifacts exist
-3. Ensure agents are following the correct protocols
-4. Confirm that state information is being properly propagated
+1. Verify that required documents/artifacts exist
+1. Ensure agents are following the correct protocols
+1. Confirm that state information is being properly propagated
 
 ### Performance Issues
+
 1. Review resource allocation
-2. Check for unnecessary complexity in requests
-3. Verify that agents are focusing on their core capabilities
-4. Consider parallelizing independent tasks
+1. Check for unnecessary complexity in requests
+1. Verify that agents are focusing on their core capabilities
+1. Consider parallelizing independent tasks
 
 ## Advanced Patterns
 
 ### Pattern 1: Research-Design-Implement-Validate
+
 ```
 @task research_agent Investigate technology options for [requirement]
 @task cto Evaluate options and select approach based on research
@@ -220,6 +248,7 @@ Different agents will respond with specialized information:
 ```
 
 ### Pattern 2: Parallel Specialization
+
 ```
 @task backend_engineer Work on API services
 @task frontend_engineer Work on UI components  
@@ -229,6 +258,7 @@ Different agents will respond with specialized information:
 ```
 
 ### Pattern 3: Quality Integration
+
 ```
 @task [implementation_agent] Implement [feature] following quality standards
 @task qa_engineer Review implementation for quality compliance

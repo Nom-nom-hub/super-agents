@@ -136,7 +136,9 @@ This document provides specific examples of how to coordinate multiple agents to
 ## Best Practices for Super Agent Coordination
 
 ### 1. Sequential Dependencies
+
 When agents need to work in sequence based on each other's output:
+
 ```
 @task product_manager Create specifications for new feature
 @task ux_designer Design based on specifications
@@ -144,7 +146,9 @@ When agents need to work in sequence based on each other's output:
 ```
 
 ### 2. Parallel Execution
+
 When agents can work simultaneously on different components:
+
 ```
 @task backend_engineer Work on API services
 @task frontend_engineer Work on UI components
@@ -152,7 +156,9 @@ When agents can work simultaneously on different components:
 ```
 
 ### 3. Integration Points
+
 When multiple agents need to coordinate on shared components:
+
 ```
 @task backend_engineer Define API contracts
 @task frontend_engineer Consume defined APIs
@@ -160,7 +166,9 @@ When multiple agents need to coordinate on shared components:
 ```
 
 ### 4. Quality Validation
+
 Always include validation and quality checks:
+
 ```
 @task [implementation agent] Build component
 @task qa_engineer Test component
@@ -168,7 +176,9 @@ Always include validation and quality checks:
 ```
 
 ### 5. Documentation and Handoff
+
 Ensure proper documentation and knowledge transfer:
+
 ```
 @task [specialized agent] Implement solution
 @task tech_writer Document implementation
@@ -178,18 +188,21 @@ Ensure proper documentation and knowledge transfer:
 ## Coordination Patterns
 
 ### Pattern 1: Design-Implementation-Validation
+
 1. Design phase: `@task ux_designer`, `@task cto`, `@task database_engineer`
-2. Implementation phase: `@task frontend_engineer`, `@task backend_engineer`, `@task ai_engineer`
-3. Validation phase: `@task qa_engineer`, `@task security_engineer`, `@task reliability_engineer`
+1. Implementation phase: `@task frontend_engineer`, `@task backend_engineer`, `@task ai_engineer`
+1. Validation phase: `@task qa_engineer`, `@task security_engineer`, `@task reliability_engineer`
 
 ### Pattern 2: Research-Development-Deployment
+
 1. Research phase: `@task research_agent`, `@task market_analyst`
-2. Development phase: `@task backend_engineer`, `@task frontend_engineer`, `@task devops_engineer`
-3. Deployment phase: `@task devops_engineer`, `@task qa_engineer`, `@task coo`
+1. Development phase: `@task backend_engineer`, `@task frontend_engineer`, `@task devops_engineer`
+1. Deployment phase: `@task devops_engineer`, `@task qa_engineer`, `@task coo`
 
 ### Pattern 3: Feature-Complete-Release
+
 1. Feature development: Multiple engineering agents
-2. Quality assurance: `@task qa_engineer`, `@task security_engineer`
-3. Release process: `@task tech_writer`, `@task coo`, `@task ceo`
+1. Quality assurance: `@task qa_engineer`, `@task security_engineer`
+1. Release process: `@task tech_writer`, `@task coo`, `@task ceo`
 
 These coordination patterns allow you to create effective "super agents" by combining the specialized capabilities of individual agents in a structured workflow that maximizes efficiency and ensures quality outcomes.

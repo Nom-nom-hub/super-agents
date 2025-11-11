@@ -505,9 +505,9 @@ This document defines standardized response templates for each agent type in AIC
 When receiving a task request, agents should:
 
 1. Identify the appropriate template based on their role
-2. Fill in all relevant sections with specific details
-3. Include all dependencies and prerequisites
-4. List all output artifacts created or modified
-5. Ensure the response provides sufficient context for subsequent agents
+1. Fill in all relevant sections with specific details
+1. Include all dependencies and prerequisites
+1. List all output artifacts created or modified
+1. Ensure the response provides sufficient context for subsequent agents
 
 These templates ensure consistent, comprehensive responses that facilitate effective collaboration between agents in the AICODE Labs organization.
