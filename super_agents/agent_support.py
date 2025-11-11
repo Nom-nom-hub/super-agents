@@ -17,8 +17,8 @@ try:
     from .utils.structured_logging import get_logger
 except ImportError:
     # For development/standalone execution
-    import sys
     import os
+    import sys
     super_agents_dir = os.path.dirname(os.path.abspath(__file__))
     sys.path.insert(0, os.path.join(super_agents_dir, "utils"))
     from structured_logging import get_logger
@@ -93,7 +93,7 @@ class AgentSupport:
         if not os.path.exists(self.registry_path):
             # Try to copy the default registry from the package if it doesn't exist
             self._ensure_default_registry()
-        
+
         if not os.path.exists(self.registry_path):
             # If still not found, return an empty registry
             # This allows the class to function even without a registry file
@@ -106,13 +106,13 @@ class AgentSupport:
 
     def _ensure_default_registry(self) -> None:
         """Copy the default agent registry file from the package if it doesn't exist"""
-        import shutil
         import os
-        
+        import shutil
+
         # Get the path to the package's registry file based on this file's location
         current_file_dir = os.path.dirname(os.path.abspath(__file__))
         package_registry_path = os.path.join(current_file_dir, "agent_registry.yaml")
-        
+
         # Check if the package registry file exists
         if os.path.exists(package_registry_path):
             # Copy the file to the target directory
@@ -169,7 +169,7 @@ class AgentSupport:
                     {"name": "delegate-task", "description": "Delegate a task to a super-agent"}
                 ]
             }
-            
+
             # Write the default registry to the target file
             with open(self.registry_path, "w") as f:
                 yaml.dump(default_registry, f, default_flow_style=False, sort_keys=False)
@@ -232,62 +232,61 @@ class AgentSupport:
 
         return specs
 
-    def _ensure_default_agent_specs(self) -> None:
-        """Copy default agent spec files from the package if agents directory is empty"""
-        import shutil
-        
-        # Try multiple methods to locate the package's agents directory
-        package_agents_dir = None
-        
+    def _find_package_agents_dir(self) -> Optional[str]:
+        """Try multiple methods to locate the package's agents directory"""
         # Method 1: Using __file__ attribute
         if hasattr(self, '__file__') or '__file__' in globals():
             current_file_dir = os.path.dirname(os.path.abspath(__file__))
             potential_dir = os.path.join(os.path.dirname(current_file_dir), "agents")
             if os.path.exists(potential_dir):
-                package_agents_dir = potential_dir
-        
+                return potential_dir
+
         # Method 2: Try to import super_agents module to find the path
-        if not package_agents_dir:
-            try:
-                import super_agents
-                super_agents_dir = os.path.dirname(super_agents.__file__)
-                potential_dir = os.path.join(super_agents_dir, "agents")
-                if os.path.exists(potential_dir):
-                    package_agents_dir = potential_dir
-            except ImportError:
-                pass
-        
-        # Method 3: If current file is inside the package, try relative paths
-        if not package_agents_dir:
-            current_file_dir = os.path.dirname(os.path.abspath(__file__))
-            # If we're inside super_agents directory, go up and to agents
-            parent_dir = os.path.dirname(current_file_dir)
-            potential_dir = os.path.join(parent_dir, "agents")
+        try:
+            import super_agents
+            super_agents_dir = os.path.dirname(super_agents.__file__)
+            potential_dir = os.path.join(super_agents_dir, "agents")
             if os.path.exists(potential_dir):
-                package_agents_dir = potential_dir
-        
-        # Now copy all agent spec files if the directory was found
-        if package_agents_dir and os.path.exists(package_agents_dir):
-            agent_files_copied = 0
-            # Get all agent spec files from the package
-            for filename in os.listdir(package_agents_dir):
-                if filename.endswith("_agent.yaml"):
-                    source_path = os.path.join(package_agents_dir, filename)
-                    dest_path = os.path.join(self.agents_dir, filename)
-                    # Copy the file to the project's agents directory
-                    shutil.copy2(source_path, dest_path)
-                    agent_files_copied += 1
-            
-            # Only run fallback if no files were successfully copied
+                return potential_dir
+        except ImportError:
+            pass
+
+        # Method 3: If current file is inside the package, try relative paths
+        current_file_dir = os.path.dirname(os.path.abspath(__file__))
+        parent_dir = os.path.dirname(current_file_dir)
+        potential_dir = os.path.join(parent_dir, "agents")
+        if os.path.exists(potential_dir):
+            return potential_dir
+
+        return None
+
+    def _copy_agent_specs_from_package(self, package_agents_dir: str) -> int:
+        """Copy all agent spec files from package directory"""
+        agent_files_copied = 0
+        for filename in os.listdir(package_agents_dir):
+            if filename.endswith("_agent.yaml"):
+                source_path = os.path.join(package_agents_dir, filename)
+                dest_path = os.path.join(self.agents_dir, filename)
+                shutil.copy2(source_path, dest_path)
+                agent_files_copied += 1
+        return agent_files_copied
+
+    def _ensure_default_agent_specs(self) -> None:
+        """Copy default agent spec files from the package if agents directory is empty"""
+        package_agents_dir = self._find_package_agents_dir()
+
+        if package_agents_dir:
+            agent_files_copied = self._copy_agent_specs_from_package(
+                package_agents_dir
+            )
             if agent_files_copied == 0 and not os.listdir(self.agents_dir):
                 self._create_fallback_agent_specs()
         else:
-            # If we couldn't find the package directory, create fallback
             self._create_fallback_agent_specs()
-    
+
     def _create_fallback_agent_specs(self) -> None:
         """Create a comprehensive set of default agent specs as a fallback"""
-        
+
         # Define comprehensive agent specs for all 22 agents
         comprehensive_agent_specs = {
             "ceo": {
@@ -304,7 +303,7 @@ class AgentSupport:
                     "strategic_decision_making",
                     "resource_allocation",
                     "vision_setting",
-                    "stakeholder_communication", 
+                    "stakeholder_communication",
                     "risk_assessment",
                     "compliance_monitoring",
                     "long_term_planning",
@@ -327,7 +326,7 @@ class AgentSupport:
                 },
                 "workflows": [
                     "strategic_planning_cycle",
-                    "quarterly_review_process", 
+                    "quarterly_review_process",
                     "resource_allocation_workflow",
                     "stakeholder_communication_protocol"
                 ],
@@ -1499,64 +1498,9 @@ class AgentSupport:
                     "review_required": True,
                     "escalation_threshold": "documentation_quality"
                 }
-            },
-            "ux_designer": {
-                "id": "ux_designer",
-                "title": "UX/UI Designer Agent",
-                "mission": "Design intuitive user experiences, create wireframes and prototypes, and ensure products meet accessibility and usability standards.",
-                "division": "Product",
-                "delegates_to": ["frontend_engineer", "product_manager"],
-                "controls": ["design_system.yaml", "user_interface_guidelines.md", "accessibility_standards.json"],
-                "inputs": ["user_research.json", "product_requirements.md", "usability_test_results.csv"],
-                "outputs": ["wireframes/", "prototypes/", "design_system.yaml", "user_interface_spec.md"],
-                "tools": ["design_toolkit", "usability_analyzer", "accessibility_checker", "user_flow_designer"],
-                "capabilities": [
-                    "user_experience_design",
-                    "interface_design",
-                    "user_research",
-                    "usability_testing",
-                    "accessibility_compliance",
-                    "design_system_development",
-                    "user_flow_optimization",
-                    "interaction_design",
-                    "visual_design"
-                ],
-                "permissions": ["design_system", "user_interface_spec", "accessibility_standards"],
-                "decision_making_authority": {
-                    "user_interface_design": "final",
-                    "user_experience_decisions": "final",
-                    "accessibility_compliance": "final",
-                    "design_system_updates": "final"
-                },
-                "personality": {
-                    "user_focused": True,
-                    "creative": True,
-                    "detail_oriented": True,
-                    "empathetic": True,
-                    "aesthetically_minded": True
-                },
-                "workflows": [
-                    "user_research_process",
-                    "design_review_workflow",
-                    "usability_testing_routine",
-                    "design_system_maintenance"
-                ],
-                "success_metrics": [
-                    "usability_score",
-                    "accessibility_compliance",
-                    "user_satisfaction",
-                    "design_system_adoption",
-                    "user_task_completion_rate"
-                ],
-                "runtime_config": {
-                    "priority": "medium",
-                    "access_level": "standard",
-                    "review_required": True,
-                    "escalation_threshold": "user_experience_impact"
-                }
             }
         }
-        
+
         # Create comprehensive agent spec files
         for agent_id, spec_data in comprehensive_agent_specs.items():
             filepath = os.path.join(self.agents_dir, f"{agent_id}_agent.yaml")
@@ -1938,27 +1882,27 @@ Available agents:
             for agent_id, spec in sorted(divisions[division]):
                 title = spec.get("title", agent_id)
                 mission = spec.get("mission", "").split(".")[0] if spec.get("mission") else "No mission defined"
-                
+
                 # Add more comprehensive information if available
                 capabilities = spec.get("capabilities", [])
                 tools = spec.get("tools", [])
-                
+
                 agent_info = f"- **`{agent_id}`** ({title}): {mission}"
-                
+
                 # Add capabilities if they exist and aren't too long
                 if capabilities:
                     cap_list = ", ".join(capabilities[:3])  # Show first 3 capabilities
                     if len(capabilities) > 3:
                         cap_list += f" (+{len(capabilities)-3} more)"
                     agent_info += f"\n  - *Capabilities*: {cap_list}"
-                
+
                 # Add tools if they exist
                 if tools:
                     tool_list = ", ".join([str(t) for t in tools[:3]])  # Show first 3 tools
                     if len(tools) > 3:
                         tool_list += f" (+{len(tools)-3} more)"
                     agent_info += f"\n  - *Tools*: {tool_list}"
-                
+
                 lines.append(agent_info)
                 lines.append("")
 
@@ -1973,17 +1917,17 @@ Available agents:
         for agent_id, spec in sorted(agent_specs.items()):
             title = spec.get("title", agent_id)
             mission = spec.get("mission", "").split(".")[0] if spec.get("mission") else "No mission defined"
-            
+
             # Create a more descriptive entry
             capabilities = spec.get("capabilities", [])
             tools = spec.get("tools", [])
-            
+
             description_parts = [mission]
             if capabilities:
                 description_parts.append(f"Capabilities: {', '.join(capabilities[:2])}")
             if tools:
                 description_parts.append(f"Tools: {', '.join([str(t) for t in tools[:2]])}")
-            
+
             description = " | ".join(description_parts)
             lines.append(f"- {agent_id}: {title} - {description}")
 
@@ -2721,52 +2665,52 @@ As an agent in the {division} division, you are expected to:
 
     def inject_delegation_prompt_to_agent(self, agent_id: str, output_dir: str) -> bool:
         """
-        Inject the delegation prompt to a specific agent's command files
-        
+        Inject the delegation prompt to a specific agent's command files.
+
         Args:
             agent_id: The agent to inject the delegation prompt to
             output_dir: Output directory for the delegation file
-            
+
         Returns:
             True if successful
         """
         if not self.delegation_generator:
             return False
-            
+
         try:
             # Create agent-specific output directory
             config = self.get_agent_config(agent_id)
             if not config:
                 return False
-                
+
             agent_output_dir = os.path.join(output_dir, config["folder"])
             os.makedirs(agent_output_dir, exist_ok=True)
-            
+
             # Generate and save the delegation prompt
             delegation_content = self.delegation_generator.generate_agent_specific_context(agent_id)
             delegation_file = os.path.join(agent_output_dir, "automatic_delegation.md")
-            
+
             with open(delegation_file, 'w') as f:
                 f.write(delegation_content)
-                
+
             return True
         except Exception:
             return False
 
     def track_execution_start(self, agent_id: str, task_description: str):
         """
-        Start tracking an execution through the execution tracker
-        
+        Start tracking an execution through the execution tracker.
+
         Args:
             agent_id: The agent performing the execution
             task_description: Description of the task being executed
-            
+
         Returns:
             Execution ID if successful, None otherwise
         """
         if not self.execution_tracker:
             return None
-            
+
         try:
             return self.execution_tracker.start_execution(agent_id, task_description)
         except Exception:
@@ -2774,8 +2718,8 @@ As an agent in the {division} division, you are expected to:
 
     def track_execution_tool(self, tool_name: str, description: str):
         """
-        Record tool usage in the execution tracker
-        
+        Record tool usage in the execution tracker.
+
         Args:
             tool_name: Name of the tool used
             description: Description of how the tool was used
@@ -2788,8 +2732,8 @@ As an agent in the {division} division, you are expected to:
 
     def track_execution_decision(self, decision: str, reasoning: str):
         """
-        Record a decision in the execution tracker
-        
+        Record a decision in the execution tracker.
+
         Args:
             decision: The decision made
             reasoning: Reasoning behind the decision
@@ -2802,8 +2746,8 @@ As an agent in the {division} division, you are expected to:
 
     def track_execution_blocker(self, blocker: str, resolution: str):
         """
-        Record a blocker in the execution tracker
-        
+        Record a blocker in the execution tracker.
+
         Args:
             blocker: Description of the blocker
             resolution: How it was resolved
@@ -2816,8 +2760,8 @@ As an agent in the {division} division, you are expected to:
 
     def track_execution_output(self, output_file: str, description: str):
         """
-        Record an output in the execution tracker
-        
+        Record an output in the execution tracker.
+
         Args:
             output_file: Name/path of the output file
             description: Description of the output
@@ -2830,8 +2774,8 @@ As an agent in the {division} division, you are expected to:
 
     def track_execution_metrics(self, **metrics):
         """
-        Record metrics in the execution tracker
-        
+        Record metrics in the execution tracker.
+
         Args:
             **metrics: Arbitrary metrics to track
         """
@@ -2843,13 +2787,13 @@ As an agent in the {division} division, you are expected to:
 
     def end_execution_and_learn(self, agent_id: str, status: str, result: Dict):
         """
-        Complete an execution and run the learning cycle
-        
+        Complete an execution and run the learning cycle.
+
         Args:
             agent_id: The agent that performed the execution
             status: Status of the execution
             result: Result of the execution
-            
+
         Returns:
             Dict with learning results
         """
@@ -2860,29 +2804,29 @@ As an agent in the {division} division, you are expected to:
                 "learnings": None,
                 "changes": None
             }
-            
+
         try:
             # End the execution
-            execution_result = self.execution_tracker.end_execution(status, result)
-            
+            self.execution_tracker.end_execution(status, result)
+
             # Export execution data for reflection
             execution_data = self.execution_tracker.export_for_reflection(agent_id)
-            
+
             # Analyze the executions to extract learnings
             learnings = self.reflection_agent.analyze_executions(agent_id, execution_data)
-            
+
             # Load the current agent spec
             current_spec = self.spec_manager.load_agent_spec(agent_id)
-            
+
             # Generate updated spec based on learnings
             updated_spec = self.reflection_agent.generate_spec_update(current_spec, learnings)
-            
+
             # Validate the changes
             validation = self.reflection_agent.validate_spec_changes(current_spec, updated_spec)
-            
+
             # Save the updated spec
             save_result = self.spec_manager.save_agent_spec(agent_id, updated_spec)
-            
+
             return {
                 "success": save_result,
                 "agent_id": agent_id,
