@@ -5,7 +5,7 @@ description = "AICODE Labs - AI-native software development company composed of 
 readme = "README.md"
 requires-python = ">=3.8"
 authors = [
-    {name = "AICODE Labs", email = "soon"},
+    {name = "AICODE Labs", email = "soon@mail.com"},
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
