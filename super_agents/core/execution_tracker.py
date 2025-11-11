@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 # Import structured logging
-from .structured_logging import get_logger
+from ..utils.structured_logging import get_logger
 
 
 class ExecutionTracker:
