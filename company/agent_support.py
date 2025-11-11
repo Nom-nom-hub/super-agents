@@ -4,6 +4,9 @@ AICODE Labs - Agent Support Module
 
 Provides multi-agent support for external AI agents (Claude, Copilot, Amp, etc.)
 Inspired by GitHub Spec Kit's agent-agnostic design pattern.
+
+Enhanced with automatic delegation intelligence system that teaches external
+agents how to automatically recognize and delegate tasks to super-agents.
 """
 
 import os
@@ -11,6 +14,27 @@ import yaml
 import shutil
 from typing import Dict, List, Optional
 from pathlib import Path
+
+# Import the delegation prompt generator for intelligent routing
+try:
+    from delegation_prompt_generator import DelegationPromptGenerator
+    HAS_DELEGATION_GENERATOR = True
+except ImportError:
+    HAS_DELEGATION_GENERATOR = False
+    DelegationPromptGenerator = None
+
+# Import autonomous spec regeneration components
+try:
+    from execution_tracker import ExecutionTracker
+    from reflection_agent import ReflectionAgent
+    from autonomous_spec_manager import AutonomousSpecManager, SpecValidator
+    HAS_SPEC_REGENERATION = True
+except ImportError:
+    HAS_SPEC_REGENERATION = False
+    ExecutionTracker = None
+    ReflectionAgent = None
+    AutonomousSpecManager = None
+    SpecValidator = None
 
 
 class AgentSupport:
@@ -21,13 +45,49 @@ class AgentSupport:
         Initialize agent support system
 
         Args:
-            company_dir: Path to the company directory
+            company_dir: Path to the directory for output files. Registry and agent specs are loaded from the package.
         """
         self.company_dir = company_dir
-        self.registry_path = os.path.join(company_dir, "agent_registry.yaml")
-        self.agents_dir = os.path.join(company_dir, "agents")
-        self.templates_dir = os.path.join(company_dir, "templates")
+        
+        # For installed tools, registry and agents should be loaded from the package location
+        import sys
+        import pathlib
+        
+        # Try to locate registry from package installation first
+        package_dir = os.path.join(os.path.dirname(__file__))
+        if os.path.exists(os.path.join(package_dir, "agent_registry.yaml")):
+            # Running from development directory
+            self.registry_path = os.path.join(package_dir, "agent_registry.yaml")
+            self.agents_dir = os.path.join(package_dir, "agents")
+            self.templates_dir = os.path.join(package_dir, "templates")
+        else:
+            # This should not happen with proper setup, but as fallback try company_dir
+            self.registry_path = os.path.join(company_dir, "agent_registry.yaml")
+            self.agents_dir = os.path.join(company_dir, "agents")
+            self.templates_dir = os.path.join(company_dir, "templates")
+        
         self.registry = self._load_registry()
+        
+        # Initialize delegation prompt generator if available
+        self.delegation_generator = None
+        if HAS_DELEGATION_GENERATOR:
+            try:
+                self.delegation_generator = DelegationPromptGenerator(company_dir)
+            except Exception as e:
+                print(f"⚠ Could not initialize delegation generator: {e}")
+        
+        # Initialize autonomous spec regeneration components if available
+        self.execution_tracker = None
+        self.reflection_agent = None
+        self.spec_manager = None
+        
+        if HAS_SPEC_REGENERATION:
+            try:
+                self.execution_tracker = ExecutionTracker(company_dir)
+                self.reflection_agent = ReflectionAgent(company_dir)
+                self.spec_manager = AutonomousSpecManager(company_dir)
+            except Exception as e:
+                print(f"⚠ Could not initialize spec regeneration: {e}")
 
     def _load_registry(self) -> Dict:
         """Load agent registry from YAML"""
@@ -862,3 +922,315 @@ As an agent in the {division} division, you are expected to:
 
         print(f"✓ Created context file: {filepath}")
         return True
+
+    def generate_delegation_prompt(
+        self, agent_id: str, format_type: str = "markdown"
+    ) -> Optional[str]:
+        """
+        Generate an automatic delegation prompt for an external agent
+
+        Args:
+            agent_id: The external agent ID (claude, copilot, qwen, amp, etc.)
+            format_type: Output format (markdown or toml)
+
+        Returns:
+            Delegation prompt string, or None if generator not available
+        """
+        if not self.delegation_generator:
+            print("⚠ Delegation generator not available")
+            return None
+
+        try:
+            return self.delegation_generator.generate_agent_specific_context(agent_id)
+        except Exception as e:
+            print(f"❌ Error generating delegation prompt: {e}")
+            return None
+
+    def generate_delegation_system_prompt(
+        self, format_type: str = "markdown"
+    ) -> Optional[str]:
+        """
+        Generate the universal delegation system prompt
+
+        Args:
+            format_type: Output format (markdown or toml)
+
+        Returns:
+            System prompt string, or None if generator not available
+        """
+        if not self.delegation_generator:
+            print("⚠ Delegation generator not available")
+            return None
+
+        try:
+            return self.delegation_generator.generate_delegation_system_prompt(format_type)
+        except Exception as e:
+            print(f"❌ Error generating system prompt: {e}")
+            return None
+
+    def generate_workflow_guide(self, workflow_id: str) -> Optional[str]:
+        """
+        Generate a workflow guide for a specific delegation workflow
+
+        Args:
+            workflow_id: The workflow identifier
+
+        Returns:
+            Workflow guide string, or None if generator not available
+        """
+        if not self.delegation_generator:
+            print("⚠ Delegation generator not available")
+            return None
+
+        try:
+            return self.delegation_generator.generate_workflow_guide(workflow_id)
+        except Exception as e:
+            print(f"❌ Error generating workflow guide: {e}")
+            return None
+
+    def generate_all_delegation_prompts(self, output_dir: str) -> bool:
+        """
+        Generate delegation prompts for all supported external agents
+
+        Args:
+            output_dir: Directory to save generated prompts
+
+        Returns:
+            True if successful
+        """
+        if not self.delegation_generator:
+            print("⚠ Delegation generator not available")
+            return False
+
+        try:
+            self.delegation_generator.generate_all_prompts(output_dir)
+            return True
+        except Exception as e:
+            print(f"❌ Error generating delegation prompts: {e}")
+            return False
+
+    def inject_delegation_prompt_to_agent(
+        self, agent_id: str, output_dir: Optional[str] = None
+    ) -> bool:
+        """
+        Inject automatic delegation prompt into agent initialization files
+
+        Args:
+            agent_id: The agent to inject prompt into (claude, copilot, etc.)
+            output_dir: Optional override for output directory
+
+        Returns:
+            True if successful
+        """
+        if not self.delegation_generator:
+            print("⚠ Delegation generator not available")
+            return False
+
+        config = self.get_agent_config(agent_id)
+        if not config:
+            print(f"❌ Unknown agent: {agent_id}")
+            return False
+
+        try:
+            # Get delegation prompt
+            delegation_prompt = self.generate_delegation_prompt(agent_id)
+            if not delegation_prompt:
+                return False
+
+            # Determine output directory
+            if output_dir is None:
+                output_dir = os.path.join(self.company_dir, config["folder"])
+            else:
+                output_dir = os.path.join(output_dir, config["folder"])
+
+            os.makedirs(output_dir, exist_ok=True)
+
+            # Write delegation prompt
+            file_ext = config.get("file_extension", "md")
+            filepath = os.path.join(output_dir, f"automatic_delegation.{file_ext}")
+
+            with open(filepath, "w") as f:
+                f.write(delegation_prompt)
+
+            print(f"✓ Injected delegation prompt: {filepath}")
+            return True
+
+        except Exception as e:
+            print(f"❌ Error injecting delegation prompt: {e}")
+            return False
+
+    def track_execution_start(self, agent_id: str, task: str) -> Optional[str]:
+        """
+        Start tracking an agent execution
+
+        Args:
+            agent_id: Agent executing task
+            task: Task description
+
+        Returns:
+            Execution ID, or None if tracking unavailable
+        """
+        if not self.execution_tracker:
+            return None
+
+        return self.execution_tracker.start_execution(agent_id, task)
+
+    def track_execution_tool(self, tool_name: str, context: Optional[str] = None):
+        """Record tool usage during execution"""
+        if self.execution_tracker:
+            self.execution_tracker.record_tool_usage(tool_name, context)
+
+    def track_execution_decision(self, decision: str, rationale: Optional[str] = None):
+        """Record a decision during execution"""
+        if self.execution_tracker:
+            self.execution_tracker.record_decision(decision, rationale)
+
+    def track_execution_blocker(self, blocker: str, resolution: Optional[str] = None):
+        """Record a blocker encountered"""
+        if self.execution_tracker:
+            self.execution_tracker.record_blocker(blocker, resolution)
+
+    def track_execution_output(self, output_path: str, description: Optional[str] = None):
+        """Record an output file created"""
+        if self.execution_tracker:
+            self.execution_tracker.record_output(output_path, description)
+
+    def track_execution_metrics(self, **kwargs):
+        """Record success metrics"""
+        if self.execution_tracker:
+            self.execution_tracker.record_metrics(**kwargs)
+
+    def end_execution_and_learn(
+        self, agent_id: str, status: str = "completed", result: Optional[Dict] = None
+    ) -> Dict:
+        """
+        End execution, trigger reflection, and regenerate spec
+
+        Complete autonomous learning cycle:
+        execute → end execution → reflect → validate → update spec → broadcast
+
+        Args:
+            agent_id: Agent that executed
+            status: Execution status (completed, failed, partial)
+            result: Optional result object
+
+        Returns:
+            Learning cycle result
+        """
+        if not self.execution_tracker or not self.reflection_agent or not self.spec_manager:
+            return {"success": False, "message": "Spec regeneration not available"}
+
+        try:
+            # 1. End execution and get log
+            execution_log = self.execution_tracker.end_execution(status, result)
+
+            if not execution_log:
+                return {"success": False, "message": "Failed to record execution"}
+
+            # 2. Export for reflection
+            execution_data = self.execution_tracker.export_for_reflection(agent_id)
+
+            # 3. Run reflection to extract learnings
+            learnings = self.reflection_agent.analyze_executions(agent_id, execution_data)
+
+            # 4. Validate changes
+            current_spec = self.spec_manager.load_agent_spec(agent_id)
+            change_validation = self.reflection_agent.validate_spec_changes(
+                current_spec,
+                self.reflection_agent.generate_spec_update(current_spec, learnings),
+            )
+
+            # 5. Regenerate spec
+            success, updated_spec, governance_note = self.spec_manager.regenerate_spec(
+                agent_id, learnings, change_validation, self.reflection_agent
+            )
+
+            if not success:
+                return {"success": False, "message": "Spec regeneration failed"}
+
+            # 6. Refresh delegation generator if available
+            if self.delegation_generator:
+                try:
+                    self.delegation_generator.agent_specs = self.load_agent_specs()
+                except Exception:
+                    pass  # Non-critical
+
+            # 7. Log completion message
+            new_version = updated_spec.get("version", 1)
+            print(f"[Autonomous Learning] Spec regeneration completed for {agent_id}, now at v{new_version}")
+
+            return {
+                "success": True,
+                "agent_id": agent_id,
+                "execution_id": execution_log.get("execution_id"),
+                "spec_version": updated_spec.get("version"),
+                "learnings": {
+                    "tools_discovered": learnings.get("tools_discovered", {}).get("new_tools"),
+                    "capabilities_added": learnings.get("proven_capabilities"),
+                    "specialization": learnings.get("specialization_area"),
+                },
+                "changes": change_validation.get("change_summary"),
+                "governance_note": governance_note,
+            }
+
+        except Exception as e:
+            print(f"❌ Error in learning cycle: {e}")
+            return {"success": False, "message": str(e)}
+
+    def get_agent_stats(self, agent_id: str) -> Dict:
+        """
+        Get execution and learning statistics for an agent
+
+        Args:
+            agent_id: Agent ID
+
+        Returns:
+            Statistics dict
+        """
+        if not self.execution_tracker:
+            return {}
+
+        return self.execution_tracker.get_aggregate_stats(agent_id)
+
+    def get_agent_evolution(self, agent_id: str) -> Dict:
+        """
+        Get evolution summary for an agent
+
+        Args:
+            agent_id: Agent ID
+
+        Returns:
+            Evolution data
+        """
+        if not self.spec_manager:
+            return {}
+
+        return self.spec_manager.get_agent_evolution_summary(agent_id)
+
+    def get_spec_history(self, agent_id: str) -> list:
+        """Get version history for agent spec"""
+        if not self.spec_manager:
+            return []
+
+        return self.spec_manager.get_spec_history(agent_id)
+
+    def compare_spec_versions(self, agent_id: str, v1: int, v2: int) -> Dict:
+        """Compare two versions of agent spec"""
+        if not self.spec_manager:
+            return {}
+
+        return self.spec_manager.compare_specs(agent_id, v1, v2)
+
+    def rollback_spec(self, agent_id: str, target_version: int) -> bool:
+        """Rollback agent spec to previous version"""
+        if not self.spec_manager:
+            return False
+
+        return self.spec_manager.rollback_spec(agent_id, target_version)
+
+    def list_agent_executions(self, agent_id: str) -> List[Dict]:
+        """Get execution history for an agent"""
+        if not self.execution_tracker:
+            return []
+
+        return self.execution_tracker.get_executions_for_agent(agent_id)

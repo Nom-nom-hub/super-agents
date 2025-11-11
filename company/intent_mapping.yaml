@@ -1,0 +1,575 @@
+version: '1.0'
+description: Automatic delegation routing for super-agents system
+intents:
+- id: api_development
+  name: API Development
+  primary_agent: backend_engineer
+  supporting_agents:
+  - devops_engineer
+  - security_engineer
+  - qa_engineer
+  keywords:
+  - api
+  - endpoint
+  - rest
+  - graphql
+  - service
+  - route
+  - handler
+  - request
+  - response
+  examples:
+  - Build an API endpoint for user registration
+  - Create a REST API for the product catalog
+  - Design GraphQL schema
+  pattern: api|endpoint|rest|graphql|service|route
+  sub_specializations:
+  - specialization: Rest Api
+    agent: backend_engineer
+    confidence: 1.0
+    execution_count: 2
+- id: database_design
+  name: Database Design
+  primary_agent: backend_engineer
+  supporting_agents:
+  - devops_engineer
+  - qa_engineer
+  keywords:
+  - database
+  - schema
+  - table
+  - query
+  - postgres
+  - mysql
+  - mongodb
+  - sql
+  - migration
+  examples:
+  - Design database schema for user profiles
+  - Optimize database queries
+  - Create data migration script
+  pattern: database|schema|table|query|postgres|mysql|mongodb|sql
+  sub_specializations:
+  - specialization: Rest Api
+    agent: backend_engineer
+    confidence: 1.0
+    execution_count: 2
+- id: business_logic
+  name: Business Logic
+  primary_agent: backend_engineer
+  supporting_agents:
+  - product_manager
+  - qa_engineer
+  keywords:
+  - business
+  - logic
+  - algorithm
+  - calculation
+  - workflow
+  - process
+  - rule
+  examples:
+  - Implement the discount calculation logic
+  - Create the order processing workflow
+  pattern: business|logic|algorithm|calculation|workflow
+  sub_specializations:
+  - specialization: Rest Api
+    agent: backend_engineer
+    confidence: 1.0
+    execution_count: 2
+- id: ui_implementation
+  name: UI Implementation
+  primary_agent: frontend_engineer
+  supporting_agents:
+  - ux_designer
+  - qa_engineer
+  keywords:
+  - ui
+  - component
+  - button
+  - form
+  - input
+  - page
+  - screen
+  - react
+  - vue
+  - angular
+  - html
+  - css
+  examples:
+  - Create a login form component
+  - Build the dashboard page
+  - Implement responsive navigation
+  pattern: ui|component|button|form|input|page|react|vue|angular
+- id: ux_design
+  name: UX/UI Design
+  primary_agent: ux_designer
+  supporting_agents:
+  - product_manager
+  - frontend_engineer
+  keywords:
+  - design
+  - layout
+  - flow
+  - mockup
+  - wireframe
+  - prototype
+  - ux
+  - user_experience
+  - usability
+  - interaction
+  examples:
+  - Design the checkout flow
+  - Create wireframes for the dashboard
+  - Improve the onboarding flow
+  pattern: design|layout|flow|mockup|wireframe|prototype|ux|user.*experience
+- id: frontend_state
+  name: State Management
+  primary_agent: frontend_engineer
+  supporting_agents:
+  - qa_engineer
+  keywords:
+  - state
+  - redux
+  - vuex
+  - context
+  - store
+  - management
+  examples:
+  - Setup Redux for state management
+  - Implement global context state
+  pattern: state|redux|vuex|context|store.*management
+- id: authentication
+  name: Authentication
+  primary_agent: security_engineer
+  supporting_agents:
+  - backend_engineer
+  - frontend_engineer
+  keywords:
+  - auth
+  - login
+  - authentication
+  - session
+  - token
+  - jwt
+  - oauth
+  - password
+  examples:
+  - Build a login system
+  - Implement JWT authentication
+  - Set up OAuth integration
+  pattern: auth|login|session|token|jwt|oauth|password
+  sub_specializations:
+  - specialization: Rest Api
+    agent: backend_engineer
+    confidence: 1.0
+    execution_count: 2
+- id: security_audit
+  name: Security Audit
+  primary_agent: security_engineer
+  supporting_agents:
+  - backend_engineer
+  - devops_engineer
+  keywords:
+  - secure
+  - security
+  - vulnerability
+  - audit
+  - penetration
+  - exploit
+  - attack
+  - encrypt
+  - compliance
+  - gdpr
+  examples:
+  - Audit the API for vulnerabilities
+  - Implement GDPR compliance
+  - Review security implementation
+  pattern: secure|security|vulnerability|audit|penetration|encrypt|compliance
+  sub_specializations:
+  - specialization: Rest Api
+    agent: backend_engineer
+    confidence: 1.0
+    execution_count: 2
+- id: testing
+  name: Testing & QA
+  primary_agent: qa_engineer
+  supporting_agents:
+  - backend_engineer
+  - frontend_engineer
+  keywords:
+  - test
+  - qa
+  - quality
+  - validation
+  - coverage
+  - integration
+  - e2e
+  - unit
+  - benchmark
+  examples:
+  - Write unit tests for the API
+  - Create end-to-end test suite
+  - Set up continuous integration tests
+  pattern: test|qa|quality|validation|coverage|integration|e2e|unit
+  sub_specializations:
+  - specialization: Rest Api
+    agent: backend_engineer
+    confidence: 1.0
+    execution_count: 2
+- id: deployment
+  name: Deployment & CI/CD
+  primary_agent: devops_engineer
+  supporting_agents:
+  - backend_engineer
+  - frontend_engineer
+  keywords:
+  - deploy
+  - deployment
+  - ci
+  - cd
+  - cicd
+  - pipeline
+  - docker
+  - kubernetes
+  - container
+  - release
+  examples:
+  - Set up CI/CD pipeline
+  - Containerize the application
+  - Deploy to production
+  pattern: deploy|ci|cd|pipeline|docker|kubernetes|container
+  sub_specializations:
+  - specialization: Rest Api
+    agent: backend_engineer
+    confidence: 1.0
+    execution_count: 2
+- id: infrastructure
+  name: Infrastructure
+  primary_agent: devops_engineer
+  supporting_agents:
+  - backend_engineer
+  keywords:
+  - infrastructure
+  - server
+  - cloud
+  - aws
+  - azure
+  - gcp
+  - network
+  - monitoring
+  - logging
+  examples:
+  - Set up cloud infrastructure
+  - Configure monitoring and alerting
+  - Scale the application
+  pattern: infrastructure|server|cloud|aws|azure|gcp|network|monitoring
+  sub_specializations:
+  - specialization: Rest Api
+    agent: backend_engineer
+    confidence: 1.0
+    execution_count: 2
+- id: reliability
+  name: Reliability & Monitoring
+  primary_agent: reliability_engineer
+  supporting_agents:
+  - devops_engineer
+  - qa_engineer
+  keywords:
+  - reliable
+  - reliability
+  - uptime
+  - monitor
+  - alert
+  - health
+  - crash
+  - error
+  - latency
+  examples:
+  - Ensure high availability
+  - Set up health checks
+  - Implement error tracking
+  pattern: reliable|uptime|monitor|alert|health|error.*tracking
+- id: ai_features
+  name: AI/ML Features
+  primary_agent: ai_engineer
+  supporting_agents:
+  - backend_engineer
+  - data_engineer
+  keywords:
+  - ai
+  - ml
+  - machine.*learning
+  - neural
+  - model
+  - training
+  - llm
+  - gpt
+  - embedding
+  - vector
+  examples:
+  - Build an AI recommendation system
+  - Implement ChatGPT integration
+  - Train a classification model
+  pattern: ai|ml|machine.*learning|neural|model|training|llm|embedding
+  sub_specializations:
+  - specialization: Rest Api
+    agent: backend_engineer
+    confidence: 1.0
+    execution_count: 2
+- id: documentation
+  name: Documentation
+  primary_agent: tech_writer
+  supporting_agents:
+  - backend_engineer
+  - frontend_engineer
+  keywords:
+  - document
+  - documentation
+  - guide
+  - readme
+  - tutorial
+  - manual
+  - api.*doc
+  examples:
+  - Write API documentation
+  - Create a user guide
+  - Document the system architecture
+  pattern: document|guide|readme|tutorial|manual|api.*doc
+  sub_specializations:
+  - specialization: Rest Api
+    agent: backend_engineer
+    confidence: 1.0
+    execution_count: 2
+- id: knowledge_management
+  name: Knowledge Management
+  primary_agent: knowledge_architect
+  supporting_agents:
+  - tech_writer
+  keywords:
+  - knowledge
+  - wiki
+  - faq
+  - learn
+  - organize
+  - structure
+  examples:
+  - Organize the knowledge base
+  - Create FAQ documentation
+  pattern: knowledge|wiki|faq|organize|structure
+- id: automation
+  name: Automation & Operations
+  primary_agent: ops_automator
+  supporting_agents:
+  - devops_engineer
+  - backend_engineer
+  keywords:
+  - automate
+  - automation
+  - script
+  - cron
+  - scheduled
+  - task
+  - job
+  - workflow
+  examples:
+  - Automate the backup process
+  - Create scheduled maintenance scripts
+  - Set up automated reporting
+  pattern: automate|script|cron|scheduled|task|job|workflow
+  sub_specializations:
+  - specialization: Rest Api
+    agent: backend_engineer
+    confidence: 1.0
+    execution_count: 2
+- id: product_spec
+  name: Product Specification
+  primary_agent: product_manager
+  supporting_agents:
+  - ux_designer
+  - market_analyst
+  keywords:
+  - requirement
+  - spec
+  - specification
+  - feature
+  - scope
+  - requirement.*analysis
+  examples:
+  - Define product requirements
+  - Create feature specification
+  - Document acceptance criteria
+  pattern: requirement|spec|specification|feature|scope
+- id: market_research
+  name: Market Research
+  primary_agent: market_analyst
+  supporting_agents:
+  - product_manager
+  - research_agent
+  keywords:
+  - market
+  - research
+  - trend
+  - analysis
+  - competitor
+  - opportunity
+  examples:
+  - Analyze market trends
+  - Research competitor solutions
+  - Identify market opportunities
+  pattern: market|research|trend|analysis|competitor|opportunity
+- id: general_build
+  name: General Build Task
+  primary_agent: builder_engineer
+  supporting_agents:
+  - product_manager
+  keywords:
+  - build
+  - create
+  - make
+  - implement
+  - develop
+  examples:
+  - Build this feature
+  - Create the system
+  pattern: build|create|make|implement|develop
+- id: strategy_planning
+  name: Strategy & Planning
+  primary_agent: ceo
+  supporting_agents:
+  - cto
+  - product_manager
+  keywords:
+  - strategy
+  - plan
+  - roadmap
+  - goal
+  - vision
+  - objective
+  - milestone
+  examples:
+  - Plan the product roadmap
+  - Define strategic goals
+  pattern: strategy|plan|roadmap|goal|vision|objective
+- id: technical_architecture
+  name: Technical Architecture
+  primary_agent: cto
+  supporting_agents:
+  - backend_engineer
+  - devops_engineer
+  keywords:
+  - architecture
+  - technical
+  - design.*pattern
+  - framework
+  - standard
+  - protocol
+  examples:
+  - Design system architecture
+  - Define technical standards
+  - Choose technology stack
+  pattern: architecture|technical.*standard|design.*pattern|framework|protocol
+  sub_specializations:
+  - specialization: Rest Api
+    agent: backend_engineer
+    confidence: 1.0
+    execution_count: 2
+- id: resource_allocation
+  name: Resource Allocation
+  primary_agent: coo
+  supporting_agents:
+  - ceo
+  - cto
+  keywords:
+  - allocate
+  - resource
+  - team
+  - manage
+  - organize
+  - schedule
+  examples:
+  - Allocate resources for the sprint
+  - Organize the team structure
+  pattern: allocate|resource|team.*management|organize|schedule
+workflows:
+- id: full_stack_app
+  name: Full-Stack Application
+  description: Complete application with API, UI, tests, and documentation
+  agents:
+  - backend_engineer: API and database
+  - frontend_engineer: UI components
+  - qa_engineer: Test suite
+  - devops_engineer: Deployment
+  - tech_writer: Documentation
+  trigger_patterns:
+  - build.*app
+  - create.*system
+  - develop.*platform
+- id: secure_system
+  name: Secure System Implementation
+  description: Implementation with security validation
+  agents:
+  - backend_engineer: Core implementation
+  - security_engineer: Security audit and fixes
+  - qa_engineer: Security testing
+  - devops_engineer: Secure deployment
+  trigger_patterns:
+  - build.*secure
+  - implement.*security
+  - make.*safe
+- id: performance_optimization
+  name: Performance Optimization
+  description: Optimize performance across stack
+  agents:
+  - backend_engineer: API optimization
+  - frontend_engineer: UI optimization
+  - devops_engineer: Infrastructure optimization
+  - qa_engineer: Performance testing
+  trigger_patterns:
+  - optimize
+  - make.*faster
+  - improve.*performance
+- id: system_hardening
+  name: System Security Hardening
+  description: Comprehensive security audit and remediation
+  agents:
+  - security_engineer: Lead audit
+  - backend_engineer: API security
+  - devops_engineer: Infrastructure security
+  - qa_engineer: Security testing
+  - tech_writer: Security documentation
+  trigger_patterns:
+  - secure.*system
+  - fix.*vulnerabilities
+  - audit.*security
+agent_configs:
+  claude:
+    format: markdown
+    include_examples: true
+    tone: helpful and proactive
+    auto_delegate: true
+  copilot:
+    format: markdown
+    include_examples: true
+    tone: technical and efficient
+    auto_delegate: true
+  qwen:
+    format: toml
+    include_examples: true
+    tone: clear and direct
+    auto_delegate: true
+  amp:
+    format: markdown
+    include_examples: true
+    tone: helpful
+    auto_delegate: true
+  cursor:
+    format: markdown
+    include_examples: true
+    tone: technical
+    auto_delegate: true
+  windsurf:
+    format: markdown
+    include_examples: true
+    tone: helpful
+    auto_delegate: true

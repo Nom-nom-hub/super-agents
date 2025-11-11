@@ -96,3 +96,15 @@ knowledge_index:
   shared_contexts: ["engineering/", "product/", "governance/"]
   compliance_domains: ["security", "privacy", "model_safety"]
   audit_log: /company/audit_log/
+
+# Autonomous Learning System Configuration
+autonomous_learning:
+  enabled: true
+  docs_index: documentation/AUTONOMOUS_LEARNING_INDEX.md
+  log_path: company/agents/.execution_logs/
+  history_path: company/agents/.history/
+  report_path: company/agents/.learning_reports/
+  governance_thresholds:
+    major_version_delta: 3
+    max_capabilities_added: 5
+    max_tools_added: 8

@@ -68,8 +68,8 @@ def cli():
 @cli.command()
 def detect():
     """Detect available AI agents on system"""
-    # Set company_dir to the directory where this module is located
-    company_dir = os.path.dirname(os.path.abspath(__file__))
+    # Set company_dir to the current working directory for installed tools
+    company_dir = os.getcwd()
     support = AgentSupport(company_dir)
     available = support.detect_available_agents()
 
@@ -116,8 +116,9 @@ def _load_scripts(scripts_dir):
 @click.option("--project", "-p", help="Project context to use for initialization")
 def init(agent, init_all, script, project):
     """Initialize super-agents for AI agents with comprehensive context files"""
-    # Set company_dir to the directory where this module is located
-    company_dir = os.path.dirname(os.path.abspath(__file__))
+    # Set company_dir to the current working directory for installed tools
+    # This ensures files are created where the user runs the command
+    company_dir = os.getcwd()
     support = AgentSupport(company_dir)
     ui = SuperAgentsUI() if HAS_RICH else None
 
@@ -252,8 +253,8 @@ def init(agent, init_all, script, project):
 )
 def context(agent):
     """Create unified context file for an agent"""
-    # Set company_dir to the directory where this module is located
-    company_dir = os.path.dirname(os.path.abspath(__file__))
+    # Set company_dir to the current working directory for installed tools
+    company_dir = os.getcwd()
     support = AgentSupport(company_dir)
 
     if support.create_agent_context_file(agent):
@@ -266,8 +267,8 @@ def context(agent):
 @cli.command()
 def list_agents():
     """List all super-agents in the system"""
-    # Set company_dir to the directory where this module is located
-    company_dir = os.path.dirname(os.path.abspath(__file__))
+    # Set company_dir to the current working directory for installed tools
+    company_dir = os.getcwd()
     support = AgentSupport(company_dir)
     agent_specs = support.load_agent_specs()
 
@@ -307,8 +308,8 @@ def list_agents():
 @click.option("--agent", "-a", required=True, help="Agent to show help for")
 def show_agent(agent):
     """Show detailed information about a super-agent"""
-    # Set company_dir to the directory where this module is located
-    company_dir = os.path.dirname(os.path.abspath(__file__))
+    # Set company_dir to the current working directory for installed tools
+    company_dir = os.getcwd()
     support = AgentSupport(company_dir)
     agent_specs = support.load_agent_specs()
 
@@ -357,8 +358,8 @@ def show_agent(agent):
 @cli.command()
 def status():
     """Show system status"""
-    # Set company_dir to the directory where this module is located
-    company_dir = os.path.dirname(os.path.abspath(__file__))
+    # Set company_dir to the current working directory for installed tools
+    company_dir = os.getcwd()
     support = AgentSupport(company_dir)
 
     print("\n📊 System Status\n")
@@ -390,8 +391,8 @@ def status():
 @cli.command()
 def check():
     """Check system prerequisites and configuration"""
-    # Set company_dir to the directory where this module is located
-    company_dir = os.path.dirname(os.path.abspath(__file__))
+    # Set company_dir to the current working directory for installed tools
+    company_dir = os.getcwd()
     support = AgentSupport(company_dir)
 
     print("\n✓ System Check\n")

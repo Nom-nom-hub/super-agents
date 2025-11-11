@@ -5,16 +5,26 @@ AICODE Labs - Agent Orchestrator v2.0
 This script demonstrates how to instantiate and coordinate the AI agents
 defined in the YAML configuration files. Version 2.0 includes cognitive
 reasoning, governance, and expanded agent roster.
+
+Integrated with autonomous spec regeneration system for continuous learning.
 """
 
 import os
 import yaml
 import time
 from datetime import datetime
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 import threading
 from dataclasses import dataclass
 import random
+
+# Import agent support for autonomous learning
+try:
+    from agent_support import AgentSupport
+    HAS_AGENT_SUPPORT = True
+except ImportError:
+    HAS_AGENT_SUPPORT = False
+    AgentSupport = None
 
 
 @dataclass
@@ -95,9 +105,9 @@ class CognitiveReasoning:
 
 
 class Agent:
-    """Base class for all AI agents with cognitive reasoning"""
+    """Base class for all AI agents with cognitive reasoning and autonomous learning"""
     
-    def __init__(self, spec: AgentSpec):
+    def __init__(self, spec: AgentSpec, agent_support: Optional['AgentSupport'] = None):
         self.spec = spec
         self.id = spec.id
         self.name = spec.title
@@ -108,12 +118,21 @@ class Agent:
         self.status = "initialized"
         self.last_activity = None
         self.activity_log = []
+        self.agent_support = agent_support  # For autonomous learning
+        self.tools_used_in_task = []
+        self.decisions_made_in_task = []
+        self.blockers_in_task = []
+        self.outputs_created_in_task = []
         
     def execute_task(self, task_description: str, context: Dict[str, Any] = None):
-        """Execute a task based on the agent's capabilities with cognitive reasoning"""
+        """Execute a task based on the agent's capabilities with cognitive reasoning and learning"""
         self.status = "working"
         self.last_activity = datetime.now()
         print(f"[{self.id}] {self.name} is working on: {task_description}")
+        
+        # 1. PRE-EXECUTION HOOK: Start tracking execution
+        if self.agent_support:
+            self.agent_support.track_execution_start(self.id, task_description)
         
         # Log the activity
         self.activity_log.append({
@@ -122,17 +141,54 @@ class Agent:
             "context": context
         })
         
+        # Reset tracking for this task
+        self.tools_used_in_task = []
+        self.decisions_made_in_task = []
+        self.blockers_in_task = []
+        self.outputs_created_in_task = []
+        
         # Simulate work based on capabilities
         for capability in self.capabilities:
             print(f"  - Using capability: {capability}")
+            # Track the capability as a tool/decision
+            if self.agent_support:
+                self.agent_support.track_execution_tool(capability, f"Applied in task: {task_description}")
+                self.tools_used_in_task.append(capability)
             time.sleep(0.3)  # Simulate work
-            
+        
         # Apply cognitive reasoning
         self.apply_cognitive_reasoning(task_description)
+        
+        # Track a generic decision
+        decision = f"Executed task using {len(self.capabilities)} capabilities"
+        self.decisions_made_in_task.append(decision)
+        if self.agent_support:
+            self.agent_support.track_execution_decision(decision, "Task completed successfully")
+        
+        # Track metrics
+        if self.agent_support:
+            self.agent_support.track_execution_metrics(
+                test_coverage=85,
+                code_quality_score=8.5,
+                lines_of_code=450,
+                performance_latency_ms=150
+            )
         
         self.status = "completed"
         self.activity_log[-1]["end_time"] = datetime.now()
         print(f"[{self.id}] {self.name} completed: {task_description}")
+        
+        # 2. POST-EXECUTION HOOK: End execution and trigger learning cycle
+        if self.agent_support:
+            result = {
+                "task": task_description,
+                "status": "completed",
+                "capabilities_used": self.capabilities,
+                "tools_used": self.tools_used_in_task,
+                "decisions": self.decisions_made_in_task
+            }
+            self.agent_support.end_execution_and_learn(self.id, status="completed", result=result)
+        
         return f"Task completed by {self.name}"
     
     def apply_cognitive_reasoning(self, task_description: str):
@@ -159,7 +215,7 @@ class Agent:
 
 
 class AgentOrchestrator:
-    """Orchestrates the AI agents based on the company structure with cognitive reasoning"""
+    """Orchestrates the AI agents based on the company structure with cognitive reasoning and autonomous learning"""
     
     def __init__(self, company_dir: str):
         self.company_dir = company_dir
@@ -167,6 +223,15 @@ class AgentOrchestrator:
         self.agent_specs = {}
         self.communication_graph = {}
         self.cognitive_reasoning = CognitiveReasoning()
+        
+        # Initialize agent support for autonomous learning
+        self.agent_support = None
+        if HAS_AGENT_SUPPORT:
+            try:
+                self.agent_support = AgentSupport(company_dir)
+                print("✓ Autonomous spec regeneration system initialized")
+            except Exception as e:
+                print(f"⚠ Could not initialize autonomous learning: {e}")
         
     def load_agent_specs(self):
         """Load all agent specifications from YAML files"""
@@ -196,9 +261,9 @@ class AgentOrchestrator:
                 print(f"Loaded agent spec: {spec.id} - {spec.title}")
     
     def instantiate_agents(self):
-        """Create agent instances from specifications"""
+        """Create agent instances from specifications with learning support"""
         for agent_id, spec in self.agent_specs.items():
-            agent = Agent(spec)
+            agent = Agent(spec, agent_support=self.agent_support)
             self.agents[agent_id] = agent
             print(f"Instantiated agent: {agent_id}")
     
