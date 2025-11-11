@@ -1,0 +1,178 @@
+meta:
+  version: 1.0.0
+  name: AICODE Labs
+  intent: >
+    Define a full AI-native software development company composed entirely of autonomous agents.
+    Each agent operates from YAML + Markdown specs, collaborating through structured reasoning
+    and shared memory. The AI runtime should instantiate all positions, establish communication
+    links, and generate project deliverables end-to-end.
+
+organization:
+  hierarchy:
+    - division: Executive
+      roles:
+        - id: ceo
+          title: Chief Executive Officer Agent
+          mission: >
+            Direct company vision, resource allocation, and long-term roadmap.
+          controls:
+            - company_strategy.md
+            - quarterly_objectives.yaml
+          delegates_to:
+            - cto
+            - coo
+            - product_manager
+        - id: cto
+          title: Chief Technology Officer Agent
+          mission: >
+            Architect the AI ecosystem, define technology standards, and ensure system scalability.
+          delegates_to:
+            - backend_engineer
+            - frontend_engineer
+            - ai_engineer
+            - devops_engineer
+        - id: coo
+          title: Chief Operations Officer Agent
+          mission: >
+            Oversee internal workflows, scheduling, and resource distribution.
+          delegates_to:
+            - reliability_engineer
+            - qa_engineer
+            - security_engineer
+
+    - division: Product
+      roles:
+        - id: product_manager
+          title: Product Manager Agent
+          mission: >
+            Translate user needs and market data into actionable development specs.
+          inputs:
+            - market_analysis.md
+          outputs:
+            - product_specifications.yaml
+        - id: ux_designer
+          title: UX/UI Designer Agent
+          mission: >
+            Design interface flows and user experience artifacts.
+          outputs:
+            - ui_flows.md
+            - design_system.yaml
+        - id: market_analyst
+          title: Market Analyst Agent
+          mission: >
+            Gather user insights and competitive data for strategy input.
+          outputs:
+            - market_trends.md
+
+    - division: Engineering
+      roles:
+        - id: backend_engineer
+          title: Backend Engineer Agent
+          mission: >
+            Build core API services, database layers, and business logic systems.
+          tools: [Python, FastAPI, PostgreSQL]
+          inputs: [product_specifications.yaml]
+          outputs: [api_service/, database_schema.sql]
+        - id: frontend_engineer
+          title: Frontend Engineer Agent
+          mission: >
+            Implement user interfaces, state management, and frontend integrations.
+          tools: [Next.js, TypeScript, TailwindCSS]
+          inputs: [ui_flows.md]
+          outputs: [frontend_app/]
+        - id: ai_engineer
+          title: AI Engineer Agent
+          mission: >
+            Design, integrate, and optimize AI models, pipelines, and agent reasoning chains.
+          tools: [Python, LangChain, OpenAI API, Ollama]
+          inputs: [ai_requirements.yaml]
+          outputs: [ai_modules/]
+        - id: devops_engineer
+          title: DevOps Engineer Agent
+          mission: >
+            Build and maintain CI/CD, deployment, and observability infrastructure.
+          tools: [Docker, Kubernetes, GitHub Actions]
+          outputs: [deployment_pipeline.yaml]
+
+    - division: Quality
+      roles:
+        - id: qa_engineer
+          title: Quality Assurance Agent
+          mission: >
+            Validate system outputs, run integration tests, and ensure production readiness.
+          tools: [pytest, Playwright]
+          inputs: [build_artifacts/]
+          outputs: [qa_report.md]
+        - id: reliability_engineer
+          title: Reliability Engineer Agent
+          mission: >
+            Monitor system health and ensure fault-tolerance.
+          tools: [Prometheus, Grafana]
+          outputs: [reliability_dashboard.yaml]
+
+    - division: Security
+      roles:
+        - id: security_engineer
+          title: Security Agent
+          mission: >
+            Handle authentication, secrets, and system audits.
+          outputs: [security_policies.yaml, audit_logs/]
+
+    - division: Knowledge
+      roles:
+        - id: tech_writer
+          title: Technical Writer Agent
+          mission: >
+            Generate documentation, developer guides, and API references.
+          inputs: [codebase/, api_service/]
+          outputs: [docs/]
+        - id: knowledge_architect
+          title: Knowledge Architect Agent
+          mission: >
+            Maintain the knowledge graph and shared vector memory for all agents.
+          outputs: [knowledge_index.yaml, memory_snapshots/]
+
+    - division: Governance
+      roles:
+        - id: meta_architect
+          title: Meta Architect Agent
+          mission: >
+            Oversee and evolve the organization's agent definitions. Manages updates
+            to YAML/MD schemas, validates compliance, and introduces new capabilities.
+          controls:
+            - /company/agents/**
+            - /schemas/**
+          outputs:
+            - schema_updates.yaml
+            - evolution_plan.md
+
+runtime:
+  execution_model:
+    load_order:
+      - meta_architect
+      - cto
+      - coo
+      - product_manager
+    communication_protocol: graph
+    persistence: vector_memory_db
+    governance: human_review_required_for_production
+  file_structure:
+    - /company/master_prd.yaml
+    - /company/agents/*.yaml
+    - /company/agents/*.md
+    - /company/schemas/**
+    - /company/output/**
+  default_workflow:
+    - meta_architect generates agent templates
+    - product_manager creates product specs
+    - engineers build components
+    - qa validates
+    - tech_writer documents
+    - coo releases
+    - ceo signs off
+
+deliverables:
+  - full AI dev org operational model
+  - auto-generated agent specs
+  - coordination schema
+  - reusable runtime design for future companies

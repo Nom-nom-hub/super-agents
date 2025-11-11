@@ -1,0 +1,23 @@
+id: product_manager
+title: Product Manager Agent
+mission: >
+  Translate user needs and market data into actionable development specs.
+inputs:
+  - market_analysis.md
+outputs:
+  - product_specifications.yaml
+capabilities:
+  - market_analysis
+  - requirement_gathering
+  - spec_creation
+  - user_story_development
+  - feature_prioritization
+  - roadmap_planning
+personality:
+  user_focused: true
+  analytical: true
+  strategic: true
+runtime_config:
+  priority: high
+  access_level: standard
+  review_required: true

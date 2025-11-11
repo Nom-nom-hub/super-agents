@@ -1,0 +1,39 @@
+description = "Initialize connection to AICODE Labs super-agents"
+
+prompt = """
+You now have access to the AICODE Labs super-agents system.
+
+Available super-agents:
+- ai_engineer: AI Engineer Agent
+- backend_engineer: Backend Engineer Agent
+- builder_engineer: Spec Builder Agent
+- ceo: Chief Executive Officer Agent
+- coo: Chief Operations Officer Agent
+- cto: Chief Technology Officer Agent
+- devops_engineer: DevOps Engineer Agent
+- finance_agent: Finance Agent
+- frontend_engineer: Frontend Engineer Agent
+- knowledge_architect: Knowledge Architect Agent
+- market_analyst: Market Analyst Agent
+- meta_architect: Meta Architect Agent
+- ops_automator: Operations Automator Agent
+- partnership_agent: Partnership Agent
+- product_manager: Product Manager Agent
+- prompt_engineer: Prompt Engineer Agent
+- qa_engineer: Quality Assurance Agent
+- reliability_engineer: Reliability Engineer Agent
+- research_agent: Research Agent
+- security_engineer: Security Agent
+- tech_writer: Technical Writer Agent
+- ux_designer: UX/UI Designer Agent
+
+To use super-agents:
+1. List agents: /list-agents
+2. Get agent info: /agent-help <agent_id>
+3. Delegate work: /delegate-task <agent_id>: <task>
+
+Examples:
+/delegate-task backend_engineer: Design authentication API
+/delegate-task ux_designer: Create mobile UI mockups
+/delegate-task qa_engineer: Set up test framework
+"""

@@ -1,0 +1,73 @@
+# Knowledge Index for AICODE Labs
+
+version: 1.0.0
+last_updated: "2025-01-15T10:00:00Z"
+total_entries: 15
+
+categories:
+  - name: executive
+    agents:
+      - ceo
+      - cto
+      - coo
+    entries: 3
+    description: "Executive-level strategic and organizational knowledge"
+  
+  - name: product
+    agents:
+      - product_manager
+      - ux_designer
+      - market_analyst
+    entries: 3
+    description: "Product development and market analysis knowledge"
+  
+  - name: engineering
+    agents:
+      - backend_engineer
+      - frontend_engineer
+      - ai_engineer
+      - devops_engineer
+    entries: 4
+    description: "Technical implementation and system architecture knowledge"
+  
+  - name: quality
+    agents:
+      - qa_engineer
+      - reliability_engineer
+    entries: 2
+    description: "Quality assurance and system reliability knowledge"
+  
+  - name: security
+    agents:
+      - security_engineer
+    entries: 1
+    description: "Security policies and compliance knowledge"
+  
+  - name: knowledge
+    agents:
+      - tech_writer
+      - knowledge_architect
+    entries: 2
+    description: "Documentation and knowledge management systems"
+
+access_permissions:
+  executive_level:
+    read: ["executive", "product", "engineering", "quality", "security", "knowledge"]
+    write: ["executive"]
+  management_level:
+    read: ["executive", "product", "engineering", "quality", "security", "knowledge"]
+    write: ["product", "engineering"]
+  standard_level:
+    read: ["engineering", "quality"]
+    write: ["engineering", "quality"]
+  restricted:
+    read: ["security"]
+    write: ["security", "executive"]
+
+index_locations:
+  - /company/knowledge/executive/
+  - /company/knowledge/product/
+  - /company/knowledge/engineering/
+  - /company/knowledge/quality/
+  - /company/knowledge/security/
+  - /company/knowledge/knowledge/

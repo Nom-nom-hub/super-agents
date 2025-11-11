@@ -1,0 +1,123 @@
+# Super-Agents Multi-Agent Support Registry
+# Defines how super-agents integrate with different external AI agents
+# Inspired by GitHub Spec Kit's agent-agnostic design
+
+agents:
+  # Anthropic Claude Code
+  claude:
+    name: "Claude Code"
+    folder: ".claude/commands/"
+    format: "markdown"
+    cli_tool: "claude"
+    install_url: "https://docs.anthropic.com/claude/reference/claude-code"
+    requires_cli: true
+    placeholder: "$ARGUMENTS"
+    file_extension: "md"
+    description: "Anthropic's Claude Code CLI for AI-assisted development"
+
+  # GitHub Copilot
+  copilot:
+    name: "GitHub Copilot"
+    folder: ".github/prompts/"
+    format: "markdown"
+    cli_tool: null
+    install_url: null
+    requires_cli: false
+    placeholder: "$ARGUMENTS"
+    file_extension: "md"
+    description: "GitHub Copilot integrated into VS Code"
+
+  # Sourcegraph Amp
+  amp:
+    name: "Amp"
+    folder: ".agents/commands/"
+    format: "markdown"
+    cli_tool: "amp"
+    install_url: "https://ampcode.com/"
+    requires_cli: true
+    placeholder: "$ARGUMENTS"
+    file_extension: "md"
+    description: "Sourcegraph's Amp AI coding agent"
+
+  # Google Gemini CLI
+  gemini:
+    name: "Gemini CLI"
+    folder: ".gemini/commands/"
+    format: "toml"
+    cli_tool: "gemini"
+    install_url: "https://github.com/google-gemini/gemini-cli"
+    requires_cli: true
+    placeholder: "{{args}}"
+    file_extension: "toml"
+    description: "Google's Gemini CLI for code generation"
+
+  # Cursor
+  cursor:
+    name: "Cursor"
+    folder: ".cursor/commands/"
+    format: "markdown"
+    cli_tool: "cursor-agent"
+    install_url: "https://cursor.sh/"
+    requires_cli: true
+    placeholder: "$ARGUMENTS"
+    file_extension: "md"
+    description: "Cursor IDE with agent capabilities"
+
+  # Windsurf
+  windsurf:
+    name: "Windsurf"
+    folder: ".windsurf/workflows/"
+    format: "markdown"
+    cli_tool: null
+    install_url: "https://windsurf.com/"
+    requires_cli: false
+    placeholder: "$ARGUMENTS"
+    file_extension: "md"
+    description: "Windsurf IDE for AI-assisted development"
+
+  # Amazon Q Developer CLI
+  q:
+    name: "Amazon Q Developer CLI"
+    folder: ".amazonq/prompts/"
+    format: "markdown"
+    cli_tool: "q"
+    install_url: "https://docs.aws.amazon.com/codewhisperer/latest/userguide/q-cli.html"
+    requires_cli: true
+    placeholder: "$ARGUMENTS"
+    file_extension: "md"
+    description: "AWS's Amazon Q Developer CLI"
+
+  # Qwen Code
+  qwen:
+    name: "Qwen Code"
+    folder: ".qwen/commands/"
+    format: "toml"
+    cli_tool: "qwen"
+    install_url: "https://github.com/QwenLM/qwen-code"
+    requires_cli: true
+    placeholder: "{{args}}"
+    file_extension: "toml"
+    description: "Alibaba's Qwen Code assistant"
+
+  # Kilo Code
+  kilocode:
+    name: "Kilo Code"
+    folder: ".kilocode/rules/"
+    format: "markdown"
+    cli_tool: null
+    install_url: "https://github.com/Kilo-Org/kilocode"
+    requires_cli: false
+    placeholder: "$ARGUMENTS"
+    file_extension: "md"
+    description: "Kilo Code IDE for spec-driven development"
+
+# Default commands to generate for each agent
+default_commands:
+  - name: "super-agents-init"
+    description: "Initialize connection to AICODE Labs super-agents system"
+  - name: "list-agents"
+    description: "List all available super-agents and their capabilities"
+  - name: "agent-help"
+    description: "Get detailed information about a specific super-agent"
+  - name: "delegate-task"
+    description: "Delegate a task to a super-agent"
