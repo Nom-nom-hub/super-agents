@@ -16,9 +16,7 @@ from typing import Dict, List, Optional
 import yaml
 
 # Import the structured logging module
-from .structured_logging import (
-    get_logger,
-)
+from .structured_logging import get_logger
 
 # Import the delegation prompt generator for intelligent routing
 try:
