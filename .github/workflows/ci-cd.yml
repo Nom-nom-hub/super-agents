@@ -1,0 +1,92 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, '3.10', '3.11', '3.12']
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev]"
+
+    - name: Lint with ruff
+      run: |
+        ruff check company/
+
+    - name: Format check with black
+      run: |
+        black --check company/
+
+    - name: Import sorting check with isort
+      run: |
+        isort --check-only company/
+
+    - name: Run unit tests
+      run: |
+        python -m pytest tests/unit/ -v
+
+    - name: Run integration tests
+      run: |
+        python -m pytest tests/integration/ -v
+
+    - name: Test package installation
+      run: |
+        pip install .
+        python -c "import company; from company.cli import cli; print('Package import successful')"
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Run bandit security scan
+      run: |
+        pip install bandit
+        bandit -r company/ -ll
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      id-token: write
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine
+
+    - name: Build package
+      run: |
+        python -m build
+
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@v1.8.11
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}

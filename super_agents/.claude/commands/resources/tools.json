@@ -1,0 +1,12 @@
+{
+  "primary_cli": "claude",
+  "file_extensions": [
+    "md"
+  ],
+  "available_commands": [
+    "super-agents-init",
+    "list-agents",
+    "agent-help",
+    "delegate-task"
+  ]
+}

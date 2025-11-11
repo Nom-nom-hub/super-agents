@@ -1,0 +1,226 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Super-Agent Specification Schema",
+  "description": "Schema for defining super-agent capabilities and configuration",
+  "required": [
+    "id",
+    "title", 
+    "mission"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the agent",
+      "pattern": "^[a-z][a-z0-9_]*[a-z0-9]$",
+      "minLength": 1,
+      "maxLength": 50
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable title for the agent",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "mission": {
+      "type": "string",
+      "description": "The primary mission statement of the agent",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "division": {
+      "type": "string",
+      "description": "Organizational division of the agent",
+      "enum": [
+        "Executive",
+        "Product", 
+        "Engineering",
+        "Quality",
+        "Security",
+        "Knowledge",
+        "Operations",
+        "Expansion",
+        "Governance"
+      ]
+    },
+    "personality": {
+      "type": "object",
+      "description": "Personality traits of the agent",
+      "properties": {
+        "logical": {
+          "type": "boolean",
+          "description": "Whether the agent approaches problems logically"
+        },
+        "detail_oriented": {
+          "type": "boolean",
+          "description": "Whether the agent pays attention to details"
+        },
+        "problem_solver": {
+          "type": "boolean",
+          "description": "Whether the agent focuses on solving problems"
+        }
+      },
+      "additionalProperties": false
+    },
+    "tools": {
+      "type": "array",
+      "description": "List of tools the agent is proficient with",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100
+      },
+      "uniqueItems": true
+    },
+    "capabilities": {
+      "type": "array",
+      "description": "List of specific capabilities the agent possesses",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100
+      },
+      "uniqueItems": true
+    },
+    "inputs": {
+      "type": "array",
+      "description": "List of input file types the agent can process",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200
+      },
+      "uniqueItems": true
+    },
+    "outputs": {
+      "type": "array",
+      "description": "List of output file types the agent produces",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200
+      },
+      "uniqueItems": true
+    },
+    "delegates_to": {
+      "type": "array",
+      "description": "List of other agents this agent delegates to",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 50
+      },
+      "uniqueItems": true
+    },
+    "runtime_config": {
+      "type": "object",
+      "description": "Runtime configuration for the agent",
+      "properties": {
+        "priority": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "access_level": {
+          "type": "string",
+          "enum": ["standard", "elevated", "admin"]
+        },
+        "review_required": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "performance_baseline": {
+      "type": "object",
+      "description": "Performance baseline metrics",
+      "properties": {
+        "avg_duration_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "total_duration_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "avg_test_coverage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "avg_code_quality": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "avg_latency_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "total_lines_of_code": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "quality_metrics": {
+      "type": "object",
+      "description": "Quality metrics",
+      "properties": {
+        "success_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "execution_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "avg_lines_per_execution": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "patterns_learned": {
+      "type": "array",
+      "description": "Patterns discovered by the agent",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "known_blockers": {
+      "type": "array",
+      "description": "Common blockers encountered by the agent",
+      "items": {
+        "type": "string"
+      }
+    },
+    "specialization_area": {
+      "type": "string",
+      "description": "Specialization area discovered by the agent",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "version": {
+      "type": "integer",
+      "description": "Version of the agent specification",
+      "minimum": 1
+    },
+    "last_updated": {
+      "type": "string",
+      "description": "Last update timestamp",
+      "format": "date-time"
+    },
+    "iterations_to_learn": {
+      "type": "integer",
+      "description": "Number of iterations before learning occurred",
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false
+}
