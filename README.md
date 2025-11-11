@@ -108,10 +108,22 @@ AICODE Labs features 22 specialized agents across 8 divisions:
 aicode list-agents
 ```
 
+**Note**: If you encounter import errors with the `aicode` command, you can run the CLI directly using Python module execution:
+
+```bash
+python -m company.cli list-agents
+```
+
 ### Get details about a specific agent
 
 ```bash
 aicode show-agent --agent backend_engineer
+```
+
+Or using the module approach:
+
+```bash
+python -m company.cli show-agent --agent backend_engineer
 ```
 
 ### Generate context for an agent

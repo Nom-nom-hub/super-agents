@@ -15,7 +15,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Nom-nom-hub/super-agents",
-    packages=find_packages(where="company"),
+    packages=find_packages(include=['company', 'company.*']),
     package_data={
         'company': ['agent_registry.yaml', 'agents/*.yaml', 'agents/*.md', 'scripts/*.sh', 'scripts/*.ps1'],
     },

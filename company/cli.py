@@ -8,10 +8,6 @@ Inspired by GitHub Spec Kit's Specify CLI.
 
 import os
 import sys
-import pathlib
-
-# Add the current directory to the path to allow relative imports
-sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
 try:
     import click
@@ -41,11 +37,26 @@ try:
 except ImportError:
     questionary = None
 
-from agent_support import AgentSupport
+try:
+    # For installed package
+    from .agent_support import AgentSupport
+except ImportError:
+    # For development/standalone execution
+    import sys
+    import os
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from agent_support import AgentSupport
 
 # Import custom UI if rich is available
 if HAS_RICH:
-    from ui import SuperAgentsUI
+    try:
+        from .ui import SuperAgentsUI
+    except ImportError:
+        # For development/standalone execution
+        import sys
+        import os
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from ui import SuperAgentsUI
 
 
 @click.group()
@@ -57,8 +68,8 @@ def cli():
 @cli.command()
 def detect():
     """Detect available AI agents on system"""
-    # Set company_dir to the 'company' subdirectory where the registry is located
-    company_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+    # Set company_dir to the directory where this module is located
+    company_dir = os.path.dirname(os.path.abspath(__file__))
     support = AgentSupport(company_dir)
     available = support.detect_available_agents()
 
@@ -105,8 +116,8 @@ def _load_scripts(scripts_dir):
 @click.option("--project", "-p", help="Project context to use for initialization")
 def init(agent, init_all, script, project):
     """Initialize super-agents for AI agents with comprehensive context files"""
-    # Set company_dir to the 'company' subdirectory where the registry is located
-    company_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+    # Set company_dir to the directory where this module is located
+    company_dir = os.path.dirname(os.path.abspath(__file__))
     support = AgentSupport(company_dir)
     ui = SuperAgentsUI() if HAS_RICH else None
 
@@ -241,8 +252,8 @@ def init(agent, init_all, script, project):
 )
 def context(agent):
     """Create unified context file for an agent"""
-    # Set company_dir to the 'company' subdirectory where the registry is located
-    company_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+    # Set company_dir to the directory where this module is located
+    company_dir = os.path.dirname(os.path.abspath(__file__))
     support = AgentSupport(company_dir)
 
     if support.create_agent_context_file(agent):
@@ -255,8 +266,8 @@ def context(agent):
 @cli.command()
 def list_agents():
     """List all super-agents in the system"""
-    # Set company_dir to the 'company' subdirectory where the registry is located
-    company_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+    # Set company_dir to the directory where this module is located
+    company_dir = os.path.dirname(os.path.abspath(__file__))
     support = AgentSupport(company_dir)
     agent_specs = support.load_agent_specs()
 
@@ -296,8 +307,8 @@ def list_agents():
 @click.option("--agent", "-a", required=True, help="Agent to show help for")
 def show_agent(agent):
     """Show detailed information about a super-agent"""
-    # Set company_dir to the 'company' subdirectory where the registry is located
-    company_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+    # Set company_dir to the directory where this module is located
+    company_dir = os.path.dirname(os.path.abspath(__file__))
     support = AgentSupport(company_dir)
     agent_specs = support.load_agent_specs()
 
@@ -346,8 +357,8 @@ def show_agent(agent):
 @cli.command()
 def status():
     """Show system status"""
-    # Set company_dir to the 'company' subdirectory where the registry is located
-    company_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+    # Set company_dir to the directory where this module is located
+    company_dir = os.path.dirname(os.path.abspath(__file__))
     support = AgentSupport(company_dir)
 
     print("\n📊 System Status\n")
@@ -379,8 +390,8 @@ def status():
 @cli.command()
 def check():
     """Check system prerequisites and configuration"""
-    # Set company_dir to the 'company' subdirectory where the registry is located
-    company_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+    # Set company_dir to the directory where this module is located
+    company_dir = os.path.dirname(os.path.abspath(__file__))
     support = AgentSupport(company_dir)
 
     print("\n✓ System Check\n")
