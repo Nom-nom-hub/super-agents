@@ -94,6 +94,14 @@ super-agents/
 
 ## Installation
 
+### Using uv (recommended)
+
+```bash
+uv tool install super-agents
+```
+
+### Using pip
+
 ```bash
 pip install super-agents
 ```
