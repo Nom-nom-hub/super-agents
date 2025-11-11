@@ -8,7 +8,7 @@ Inspired by GitHub Spec Kit's Specify CLI.
 
 import os
 import sys
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 try:
     import click
@@ -125,6 +125,215 @@ def _load_scripts(scripts_dir: str) -> Dict[str, str]:
     return scripts
 
 
+def _select_agent_interactive_ui(
+    support: AgentSupport, ui: Optional[SuperAgentsUI]
+) -> Tuple[Optional[str], bool]:
+    """Handle agent selection using rich UI."""
+    registered = support.list_registered_agents()
+    agents_dict = {
+        agent_id: support.get_agent_config(agent_id) for agent_id in registered
+    }
+
+    # Use beautiful custom UI
+    selection = ui.select_agent(agents_dict)
+    if selection is None:
+        return None, False
+    elif selection == "all":
+        return None, True
+    else:
+        return selection, False
+
+
+def _select_agent_interactive_questionary(
+    support: AgentSupport,
+) -> Tuple[Optional[str], bool]:
+    """Handle agent selection using questionary."""
+    registered = support.list_registered_agents()
+    choices = [
+        {
+            "name": f"{agent_id} ({support.get_agent_config(agent_id)['name']})",
+            "value": agent_id,
+        }
+        for agent_id in registered
+    ]
+    choices.append({"name": "All agents", "value": "all"})
+
+    selection = questionary.select("Select an agent:", choices=choices).ask()
+
+    if selection is None:  # User cancelled
+        return None, False
+    elif selection == "all":
+        return None, True
+    else:
+        return selection, False
+
+
+def _select_agent_interactive_click(
+    support: AgentSupport,
+) -> Tuple[Optional[str], bool]:
+    """Handle agent selection using click prompts."""
+    registered = support.list_registered_agents()
+    agent_list = list(registered)
+
+    click.echo("\n🤖  Super-Agents Initialization\n")
+    click.echo("Select an agent:")
+    for i, a in enumerate(agent_list, 1):
+        config = support.get_agent_config(a)
+        click.echo(f"  {i}. {a} ({config['name']})")
+    click.echo(f"  {len(agent_list) + 1}. All agents")
+    click.echo("  0. Cancel\n")
+
+    choice = click.prompt("Enter your choice", type=int)
+
+    if choice == 0:
+        return None, False
+    elif choice == len(agent_list) + 1:
+        return None, True
+    elif 1 <= choice <= len(agent_list):
+        return agent_list[choice - 1], False
+    else:
+        click.secho("Invalid choice", fg="red")
+        return None, False
+
+
+def _select_agent_interactive(
+    support: AgentSupport, ui: Optional[SuperAgentsUI]
+) -> Tuple[Optional[str], bool]:
+    """Handle interactive agent selection using available UI options."""
+
+    registered = support.list_registered_agents()
+    if not registered:
+        return None, False  # No agents to select
+
+    if ui:
+        return _select_agent_interactive_ui(support, ui)
+    elif questionary:
+        return _select_agent_interactive_questionary(support)
+    else:
+        return _select_agent_interactive_click(support)
+
+
+def _initialize_agents(
+    support: AgentSupport,
+    agent: Optional[str],
+    init_all: bool,
+    ui: Optional[SuperAgentsUI],
+) -> bool:
+    """Handle agent initialization based on selection."""
+    if init_all:
+        if ui:
+            ui.show_progress("Initializing all agents")
+        else:
+            click.echo("\nInitializing all agents...")
+
+        count = support.initialize_for_all_available()
+
+        if ui:
+            ui.show_success(f"Initialized {count} agents successfully!")
+        else:
+            click.secho(
+                f"\n✓ Initialized {count} agents successfully!", fg="green", bold=True
+            )
+        return True
+    elif agent:
+        if ui:
+            ui.show_progress(f"Initializing {agent}")
+        else:
+            click.echo(f"\nInitializing {agent}...")
+
+        success = support.initialize_for_agent(agent, output_dir=os.getcwd())
+
+        if success:
+            if ui:
+                ui.show_success(f"Initialized {agent} successfully!")
+            else:
+                click.secho(
+                    f"\n✓ Initialized {agent} successfully!", fg="green", bold=True
+                )
+        else:
+            if ui:
+                ui.show_error(f"Failed to initialize {agent}")
+            else:
+                click.secho(f"\n✗ Failed to initialize {agent}", fg="red", bold=True)
+            sys.exit(1)
+        return success
+    return False
+
+
+def _select_script_interactive(
+    scripts: Dict[str, str], ui: Optional[SuperAgentsUI]
+) -> Optional[str]:
+    """Handle interactive script selection using available UI options."""
+    if not scripts:
+        return None
+
+    if ui:
+        return ui.select_script(scripts)
+    elif questionary:
+        # Use questionary for interactive script selection if available
+        choices = [
+            {"name": script_name, "value": script_name}
+            for script_name in sorted(scripts.keys())
+        ]
+        choices.insert(
+            0, {"name": "Skip", "value": None}
+        )  # Add "Skip" option at the beginning
+
+        return questionary.select("Select a script (optional):", choices=choices).ask()
+    else:
+        click.echo("\nAvailable scripts:")
+        script_list = sorted(scripts.keys())
+        for i, script_name in enumerate(script_list, 1):
+            click.echo(f"  {i}. {script_name}")
+        click.echo("  0. Skip\n")
+
+        script_choice = click.prompt("Select a script", type=int, default=0)
+
+        if 1 <= script_choice <= len(script_list):
+            return script_list[script_choice - 1]
+        return None
+
+
+def _execute_script(script: str, ui: Optional[SuperAgentsUI]) -> None:
+    """Execute the selected script."""
+    scripts_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "..", "scripts"
+    )
+    scripts = _load_scripts(scripts_dir)
+
+    if script in scripts:
+        script_path = scripts[script]
+
+        if ui:
+            ui.show_progress(f"Running {script}")
+        else:
+            click.echo(f"\nRunning {script}...")
+
+        import subprocess
+
+        # Use subprocess instead of os.system to avoid shell injection
+        if script.endswith(".sh"):
+            result = subprocess.run(["bash", script_path], check=False)
+        else:
+            result = subprocess.run(["powershell", "-File", script_path], check=False)
+
+        if result == 0:
+            if ui:
+                ui.show_success("Script executed successfully")
+            else:
+                click.secho("\n✓ Script executed successfully", fg="green", bold=True)
+        else:
+            if ui:
+                ui.show_error("Script execution failed")
+            else:
+                click.secho("\n✗ Script execution failed", fg="red", bold=True)
+    else:
+        if ui:
+            ui.show_error(f"Script '{script}' not found")
+        else:
+            click.secho(f"✗ Script '{script}' not found", fg="red")
+
+
 @cli.command()
 @click.option(
     "--agent",
@@ -154,178 +363,25 @@ def init(
     support = AgentSupport(agents_dir)
     ui = SuperAgentsUI() if HAS_RICH else None
 
+    # Handle agent selection if not specified
     if not agent and not init_all:
-        # Interactive mode - select agent
-        registered = support.list_registered_agents()
-        agents_dict = {}
+        agent, init_all = _select_agent_interactive(support, ui)
+        if agent is None and not init_all:
+            return  # User cancelled
 
-        for agent_id in registered:
-            config = support.get_agent_config(agent_id)
-            agents_dict[agent_id] = config
+    # Initialize agents based on selection
+    _initialize_agents(support, agent, init_all, ui)
 
-        if ui:
-            # Use beautiful custom UI
-            selection = ui.select_agent(agents_dict)
-            if selection is None:
-                return
-            elif selection == "all":
-                init_all = True
-            else:
-                agent = selection
-        elif questionary:
-            # Use questionary for interactive selection if available
-            choices = []
-            for agent_id in registered:
-                config = support.get_agent_config(agent_id)
-                choices.append(
-                    {"name": f"{agent_id} ({config['name']})", "value": agent_id}
-                )
-            choices.append({"name": "All agents", "value": "all"})
-
-            selection = questionary.select("Select an agent:", choices=choices).ask()
-
-            if selection is None:  # User cancelled
-                return
-            elif selection == "all":
-                init_all = True
-            else:
-                agent = selection
-        else:
-            # Fallback to click prompts
-            click.echo("\n🤖  Super-Agents Initialization\n")
-            click.echo("Select an agent:")
-            agent_list = list(registered)
-            for i, a in enumerate(agent_list, 1):
-                config = support.get_agent_config(a)
-                click.echo(f"  {i}. {a} ({config['name']})")
-            click.echo(f"  {len(agent_list) + 1}. All agents")
-            click.echo("  0. Cancel\n")
-
-            choice = click.prompt("Enter your choice", type=int)
-
-            if choice == 0:
-                return
-            elif choice == len(agent_list) + 1:
-                init_all = True
-            elif 1 <= choice <= len(agent_list):
-                agent = agent_list[choice - 1]
-            else:
-                click.secho("Invalid choice", fg="red")
-                return
-
-    if init_all:
-        if ui:
-            ui.show_progress("Initializing all agents")
-        else:
-            click.echo("\nInitializing all agents...")
-
-        count = support.initialize_for_all_available()
-
-        if ui:
-            ui.show_success(f"Initialized {count} agents successfully!")
-        else:
-            click.secho(
-                f"\n✓ Initialized {count} agents successfully!", fg="green", bold=True
-            )
-    elif agent:
-        if ui:
-            ui.show_progress(f"Initializing {agent}")
-        else:
-            click.echo(f"\nInitializing {agent}...")
-
-        success = support.initialize_for_agent(agent, output_dir=os.getcwd())
-
-        if success:
-            if ui:
-                ui.show_success(f"Initialized {agent} successfully!")
-            else:
-                click.secho(
-                    f"\n✓ Initialized {agent} successfully!", fg="green", bold=True
-                )
-        else:
-            if ui:
-                ui.show_error(f"Failed to initialize {agent}")
-            else:
-                click.secho(f"\n✗ Failed to initialize {agent}", fg="red", bold=True)
-            sys.exit(1)
-
-    # Interactive script selection if not specified
+    # Handle script selection and execution
     if not script:
         scripts_dir = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "..", "scripts"
         )
         scripts = _load_scripts(scripts_dir)
+        script = _select_script_interactive(scripts, ui)
 
-        if scripts:
-            if ui:
-                script = ui.select_script(scripts)
-            elif questionary:
-                # Use questionary for interactive script selection if available
-                choices = [
-                    {"name": script_name, "value": script_name}
-                    for script_name in sorted(scripts.keys())
-                ]
-                choices.insert(
-                    0, {"name": "Skip", "value": None}
-                )  # Add "Skip" option at the beginning
-
-                script = questionary.select(
-                    "Select a script (optional):", choices=choices
-                ).ask()
-            else:
-                click.echo("\nAvailable scripts:")
-                script_list = sorted(scripts.keys())
-                for i, script_name in enumerate(script_list, 1):
-                    click.echo(f"  {i}. {script_name}")
-                click.echo("  0. Skip\n")
-
-                script_choice = click.prompt("Select a script", type=int, default=0)
-
-                if 1 <= script_choice <= len(script_list):
-                    script = script_list[script_choice - 1]
-
-    # Execute script if selected
     if script:
-        scripts_dir = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)), "..", "scripts"
-        )
-        scripts = _load_scripts(scripts_dir)
-
-        if script in scripts:
-            script_path = scripts[script]
-
-            if ui:
-                ui.show_progress(f"Running {script}")
-            else:
-                click.echo(f"\nRunning {script}...")
-
-            import subprocess
-
-            # Use subprocess instead of os.system to avoid shell injection
-            if script.endswith(".sh"):
-                result = subprocess.run(["bash", script_path], check=False)
-            else:
-                result = subprocess.run(
-                    ["powershell", "-File", script_path], check=False
-                )
-
-            if result == 0:
-                if ui:
-                    ui.show_success("Script executed successfully")
-                else:
-                    click.secho(
-                        "\n✓ Script executed successfully", fg="green", bold=True
-                    )
-            else:
-                if ui:
-                    ui.show_error("Script execution failed")
-                else:
-                    click.secho("\n✗ Script execution failed", fg="red", bold=True)
-        else:
-            if ui:
-                ui.show_error(f"Script '{script}' not found")
-            else:
-                click.secho(f"✗ Script '{script}' not found", fg="red")
+        _execute_script(script, ui)
 
 
 @cli.command()
@@ -399,6 +455,44 @@ def list_agents() -> None:
     print("\n" + "=" * 60 + "\n")
 
 
+def _format_agent_section(title: str, items: List[str]) -> str:
+    """Format a section of the agent information."""
+    if not items:
+        return ""
+
+    section = f"\n{title}:"
+    for item in items:
+        section += f"\n  • {item}"
+    return section
+
+
+def _format_agent_info(spec: Dict[str, Any], agent_id: str) -> str:
+    """Format comprehensive agent information."""
+    output = f"\n{spec.get('title', agent_id)}"
+    output += f"\n{'=' * 60}"
+    output += f"\n\nID: {agent_id}"
+    output += f"\nDivision: {spec.get('division', 'Unknown')}"
+    output += f"\n\nMission:\n  {spec.get('mission', 'N/A')}"
+
+    if spec.get("capabilities"):
+        output += _format_agent_section("Capabilities", spec.get("capabilities"))
+
+    if spec.get("tools"):
+        output += _format_agent_section("Tools", spec.get("tools"))
+
+    if spec.get("inputs"):
+        output += _format_agent_section("Accepts", spec.get("inputs"))
+
+    if spec.get("outputs"):
+        output += _format_agent_section("Produces", spec.get("outputs"))
+
+    if spec.get("delegates_to"):
+        output += _format_agent_section("Delegates To", spec.get("delegates_to"))
+
+    output += f"\n\n{'=' * 60}\n"
+    return output
+
+
 @cli.command()
 @click.option("--agent", "-a", required=True, help="Agent to show help for")
 def show_agent(agent: str) -> None:
@@ -422,40 +516,8 @@ def show_agent(agent: str) -> None:
 
     spec: Dict[str, Any] = agent_specs[agent]
 
-    click.secho(f"\n{spec.get('title', agent)}", fg="cyan", bold=True)
-    click.echo("=" * 60)
-
-    click.echo(f"\nID: {agent}")
-    click.echo(f"Division: {spec.get('division', 'Unknown')}")
-    click.echo("\nMission:")
-    click.echo(f"  {spec.get('mission', 'N/A')}")
-
-    if spec.get("capabilities"):
-        click.echo("\nCapabilities:")
-        for cap in spec.get("capabilities"):
-            click.echo(f"  • {cap}")
-
-    if spec.get("tools"):
-        click.echo("\nTools:")
-        for tool in spec.get("tools"):
-            click.echo(f"  • {tool}")
-
-    if spec.get("inputs"):
-        click.echo("\nAccepts:")
-        for input_type in spec.get("inputs"):
-            click.echo(f"  • {input_type}")
-
-    if spec.get("outputs"):
-        click.echo("\nProduces:")
-        for output_type in spec.get("outputs"):
-            click.echo(f"  • {output_type}")
-
-    if spec.get("delegates_to"):
-        click.echo("\nDelegates To:")
-        for delegate in spec.get("delegates_to"):
-            click.echo(f"  • {delegate}")
-
-    click.echo("\n" + "=" * 60 + "\n")
+    formatted_info = _format_agent_info(spec, agent)
+    click.secho(formatted_info, fg="white")
 
 
 @cli.command()

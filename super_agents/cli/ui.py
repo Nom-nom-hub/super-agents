@@ -88,6 +88,49 @@ class SuperAgentsUI:
             color_map={"script": "cyan", "skip": "gray50"},
         )
 
+    def _display_menu_items(self, items, current_selection, color_map):
+        """Display the menu items with proper highlighting."""
+        for idx, (item_type, _value, display_name) in enumerate(items):
+            color = color_map.get(item_type, "white")
+
+            if idx == current_selection:
+                # Selected item
+                line = Text(f"  ❯ {display_name}", style=f"bold {color} on blue")
+            else:
+                # Unselected item
+                line = Text(f"    {display_name}", style=color)
+
+            self.console.print(line)
+
+    def _handle_key_input(self, key, current_selection, items):
+        """Handle keyboard input and return new selection or value."""
+        if ord(key) == 27:  # ESC
+            # Read the rest of the escape sequence for arrow keys
+            next1 = sys.stdin.read(1)
+            if next1 == "[":  # Arrow key sequence
+                arrow = sys.stdin.read(1)
+                if arrow == "A":  # Up arrow
+                    return (current_selection - 1) % len(items)
+                elif arrow == "B":  # Down arrow
+                    return (current_selection + 1) % len(items)
+        elif ord(key) == 13:  # Enter
+            _, value, _ = items[current_selection]
+            return value
+        elif ord(key) == 3:  # Ctrl+C
+            self.console.print()
+            self.console.print(Text("⊘ Cancelled", style="bold red"))
+            return None
+        elif ord(key) == 127 or ord(key) == 8:  # Backspace or Delete
+            # Move selection up as a fallback
+            return (current_selection - 1) % len(items)
+        # Add any other key as a navigation key
+        elif key.lower() == "j":  # j for down
+            return (current_selection + 1) % len(items)
+        elif key.lower() == "k":  # k for up
+            return (current_selection - 1) % len(items)
+
+        return current_selection  # No change if key not recognized
+
     def _show_menu(self, title, items, color_map=None):
         """
         Display an interactive menu with arrow key selection
@@ -120,17 +163,7 @@ class SuperAgentsUI:
             self.console.print()
 
             # Menu items
-            for idx, (item_type, _value, display_name) in enumerate(items):
-                color = color_map.get(item_type, "white")
-
-                if idx == current_selection:
-                    # Selected item
-                    line = Text(f"  ❯ {display_name}", style=f"bold {color} on blue")
-                else:
-                    # Unselected item
-                    line = Text(f"    {display_name}", style=color)
-
-                self.console.print(line)
+            self._display_menu_items(items, current_selection, color_map)
 
             self.console.print()
             self.console.print(
@@ -157,31 +190,14 @@ class SuperAgentsUI:
                     tty.setraw(fd)
                     key = sys.stdin.read(1)
 
-                    if ord(key) == 27:  # ESC
-                        # Read the rest of the escape sequence for arrow keys
-                        next1 = sys.stdin.read(1)
-                        if next1 == "[":  # Arrow key sequence
-                            arrow = sys.stdin.read(1)
-                            if arrow == "A":  # Up arrow
-                                current_selection = (current_selection - 1) % len(items)
-                            elif arrow == "B":  # Down arrow
-                                current_selection = (current_selection + 1) % len(items)
-                        # If it's not an arrow key sequence, ignore it
-                    elif ord(key) == 13:  # Enter
-                        _, value, _ = items[current_selection]
-                        return value
-                    elif ord(key) == 3:  # Ctrl+C
-                        self.console.print()
-                        self.console.print(Text("⊘ Cancelled", style="bold red"))
-                        return None
-                    elif ord(key) == 127 or ord(key) == 8:  # Backspace or Delete
-                        # Move selection up as a fallback
-                        current_selection = (current_selection - 1) % len(items)
-                    # Add any other key as a navigation key
-                    elif key.lower() == "j":  # j for down
-                        current_selection = (current_selection + 1) % len(items)
-                    elif key.lower() == "k":  # k for up
-                        current_selection = (current_selection - 1) % len(items)
+                    result = self._handle_key_input(key, current_selection, items)
+
+                    # If result is None (cancelled) or a value (selected), return it
+                    if result is None or not isinstance(result, int):
+                        return result
+                    else:
+                        current_selection = result  # Update selection
+
                 finally:
                     termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 

@@ -88,6 +88,44 @@ class SuperAgentsUI:
             color_map={"script": "cyan", "skip": "gray50"},
         )
 
+    def _display_menu_items(self, items, current_selection, color_map):
+        """Display the menu items with proper highlighting."""
+        for idx, (item_type, _value, display_name) in enumerate(items):
+            color = color_map.get(item_type, "white")
+
+            if idx == current_selection:
+                # Selected item
+                line = Text(f"  ❯ {display_name}", style=f"bold {color} on blue")
+            else:
+                # Unselected item
+                line = Text(f"    {display_name}", style=color)
+
+            self.console.print(line)
+
+    def _handle_key_input(self, current_selection, items):
+        """Handle keyboard input and return new selection or value."""
+        import sys
+
+        key = sys.stdin.read(1)
+
+        if ord(key) == 27:  # ESC
+            sys.stdin.read(2)  # Read [ and arrow direction
+            arrow = sys.stdin.read(1)
+
+            if arrow == "A":  # Up arrow
+                return (current_selection - 1) % len(items)
+            elif arrow == "B":  # Down arrow
+                return (current_selection + 1) % len(items)
+        elif ord(key) == 13:  # Enter
+            _, value, _ = items[current_selection]
+            return value
+        elif ord(key) == 3:  # Ctrl+C
+            self.console.print()
+            self.console.print(Text("⊘ Cancelled", style="bold red"))
+            return None
+
+        return current_selection  # No change if key not recognized
+
     def _show_menu(self, title, items, color_map=None):
         """
         Display an interactive menu with arrow key selection
@@ -115,17 +153,7 @@ class SuperAgentsUI:
             self.console.print()
 
             # Menu items
-            for idx, (item_type, _value, display_name) in enumerate(items):
-                color = color_map.get(item_type, "white")
-
-                if idx == current_selection:
-                    # Selected item
-                    line = Text(f"  ❯ {display_name}", style=f"bold {color} on blue")
-                else:
-                    # Unselected item
-                    line = Text(f"    {display_name}", style=color)
-
-                self.console.print(line)
+            self._display_menu_items(items, current_selection, color_map)
 
             self.console.print()
             self.console.print(
@@ -151,23 +179,15 @@ class SuperAgentsUI:
 
                 try:
                     tty.setraw(fd)
-                    key = sys.stdin.read(1)
 
-                    if ord(key) == 27:  # ESC
-                        sys.stdin.read(2)  # Read [ and arrow direction
-                        arrow = sys.stdin.read(1)
+                    result = self._handle_key_input(current_selection, items)
 
-                        if arrow == "A":  # Up arrow
-                            current_selection = (current_selection - 1) % len(items)
-                        elif arrow == "B":  # Down arrow
-                            current_selection = (current_selection + 1) % len(items)
-                    elif ord(key) == 13:  # Enter
-                        _, value, _ = items[current_selection]
-                        return value
-                    elif ord(key) == 3:  # Ctrl+C
-                        self.console.print()
-                        self.console.print(Text("⊘ Cancelled", style="bold red"))
-                        return None
+                    # If result is None (cancelled) or a value (selected), return it
+                    if result is None or not isinstance(result, int):
+                        return result
+                    else:
+                        current_selection = result  # Update selection
+
                 finally:
                     termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 

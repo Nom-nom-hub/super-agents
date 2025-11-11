@@ -296,14 +296,8 @@ class AgentOrchestrator:
                 # Simulate startup process
                 time.sleep(0.2)
 
-    def run_demo_workflow(self):
-        """Demonstrate a comprehensive workflow between agents with cognitive reasoning"""
-        print("\n" + "=" * 60)
-        print("DEMONSTRATING AI COMPANY WORKFLOW v2.0")
-        print("With Cognitive Reasoning and Expanded Agent Roster")
-        print("=" * 60)
-
-        # Phase 1: Strategic Planning
+    def _run_executive_phase(self):
+        """Execute the strategic planning phase."""
         print("\n1. EXECUTIVE PHASE: Strategic Planning & Resource Allocation")
         ceo = self.agents.get("ceo")
         if ceo:
@@ -319,7 +313,8 @@ class AgentOrchestrator:
         if coo:
             coo.execute_task("Plan operational workflows and resource distribution", {})
 
-        # Phase 2: Market Research & Product Definition
+    def _run_product_phase(self):
+        """Execute the market research and product definition phase."""
         print("\n2. PRODUCT PHASE: Market Research & Specification")
         market_analyst = self.agents.get("market_analyst")
         if market_analyst:
@@ -333,7 +328,8 @@ class AgentOrchestrator:
         if ux_designer:
             ux_designer.execute_task("Design user interface flows and experiences", {})
 
-        # Phase 3: Technical Implementation
+    def _run_engineering_phase(self):
+        """Execute the technical implementation phase."""
         print("\n3. ENGINEERING PHASE: Technical Implementation")
         ai_engineer = self.agents.get("ai_engineer")
         if ai_engineer:
@@ -365,7 +361,8 @@ class AgentOrchestrator:
                 "Convert specifications to runnable codebase", {}
             )
 
-        # Phase 4: Quality Assurance & Security
+    def _run_quality_phase(self):
+        """Execute the quality assurance and security phase."""
         print("\n4. QUALITY & SECURITY PHASE: Validation & Protection")
         security_engineer = self.agents.get("security_engineer")
         if security_engineer:
@@ -385,7 +382,8 @@ class AgentOrchestrator:
                 "Monitor system health and ensure uptime", {}
             )
 
-        # Phase 5: Operations & Knowledge Management
+    def _run_operations_phase(self):
+        """Execute the operations and knowledge management phase."""
         print("\n5. OPERATIONS & KNOWLEDGE PHASE: Management & Documentation")
         tech_writer = self.agents.get("tech_writer")
         if tech_writer:
@@ -401,7 +399,8 @@ class AgentOrchestrator:
         if ops_automator:
             ops_automator.execute_task("Automate maintenance and reporting tasks", {})
 
-        # Phase 6: Expansion & Research
+    def _run_expansion_phase(self):
+        """Execute the expansion and research phase."""
         print("\n6. EXPANSION PHASE: Advanced Capabilities")
         finance_agent = self.agents.get("finance_agent")
         if finance_agent:
@@ -421,7 +420,8 @@ class AgentOrchestrator:
         if research_agent:
             research_agent.execute_task("Research new models and techniques", {})
 
-        # Phase 7: Governance & Release
+    def _run_governance_phase(self):
+        """Execute the governance and release phase."""
         print("\n7. GOVERNANCE PHASE: Review & Release")
         meta_architect = self.agents.get("meta_architect")
         if meta_architect:
@@ -429,8 +429,29 @@ class AgentOrchestrator:
                 "Validate compliance and evolve agent specs", {}
             )
 
-        coo.execute_task("Coordinate final release process", {})
-        ceo.execute_task("Provide final approval for production release", {})
+        coo = self.agents.get("coo")
+        if coo:
+            coo.execute_task("Coordinate final release process", {})
+
+        ceo = self.agents.get("ceo")
+        if ceo:
+            ceo.execute_task("Provide final approval for production release", {})
+
+    def run_demo_workflow(self):
+        """Demonstrate a comprehensive workflow between agents with cognitive reasoning"""
+        print("\n" + "=" * 60)
+        print("DEMONSTRATING AI COMPANY WORKFLOW v2.0")
+        print("With Cognitive Reasoning and Expanded Agent Roster")
+        print("=" * 60)
+
+        # Execute all phases in sequence
+        self._run_executive_phase()
+        self._run_product_phase()
+        self._run_engineering_phase()
+        self._run_quality_phase()
+        self._run_operations_phase()
+        self._run_expansion_phase()
+        self._run_governance_phase()
 
         print("\nCOMPREHENSIVE WORKFLOW DEMONSTRATED SUCCESSFULLY!")
 
