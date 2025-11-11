@@ -82,14 +82,14 @@ def detect() -> None:
     """Detect available AI agents on system"""
     # Set agents_dir to the current working directory for installed tools
     agents_dir: str = os.getcwd()
-    
+
     # If registry not found in current directory, try super_agents subdirectory
     registry_path = os.path.join(agents_dir, "agent_registry.yaml")
     if not os.path.exists(registry_path):
         potential_agent_dir = os.path.join(agents_dir, "super_agents")
         if os.path.exists(potential_agent_dir):
             agents_dir = potential_agent_dir
-    
+
     support: AgentSupport = AgentSupport(agents_dir)
     available: Dict[str, bool] = support.detect_available_agents()
 
@@ -143,14 +143,14 @@ def init(
     # Set agents_dir to the current working directory for installed tools
     # This ensures files are created where the user runs the command
     agents_dir = os.getcwd()
-    
+
     # If registry not found in current directory, try super_agents subdirectory
     registry_path = os.path.join(agents_dir, "agent_registry.yaml")
     if not os.path.exists(registry_path):
         potential_agent_dir = os.path.join(agents_dir, "super_agents")
         if os.path.exists(potential_agent_dir):
             agents_dir = potential_agent_dir
-    
+
     support = AgentSupport(agents_dir)
     ui = SuperAgentsUI() if HAS_RICH else None
 
@@ -177,11 +177,13 @@ def init(
             choices = []
             for agent_id in registered:
                 config = support.get_agent_config(agent_id)
-                choices.append({"name": f"{agent_id} ({config['name']})", "value": agent_id})
+                choices.append(
+                    {"name": f"{agent_id} ({config['name']})", "value": agent_id}
+                )
             choices.append({"name": "All agents", "value": "all"})
-            
+
             selection = questionary.select("Select an agent:", choices=choices).ask()
-            
+
             if selection is None:  # User cancelled
                 return
             elif selection == "all":
@@ -259,10 +261,17 @@ def init(
                 script = ui.select_script(scripts)
             elif questionary:
                 # Use questionary for interactive script selection if available
-                choices = [{"name": script_name, "value": script_name} for script_name in sorted(scripts.keys())]
-                choices.insert(0, {"name": "Skip", "value": None})  # Add "Skip" option at the beginning
-                
-                script = questionary.select("Select a script (optional):", choices=choices).ask()
+                choices = [
+                    {"name": script_name, "value": script_name}
+                    for script_name in sorted(scripts.keys())
+                ]
+                choices.insert(
+                    0, {"name": "Skip", "value": None}
+                )  # Add "Skip" option at the beginning
+
+                script = questionary.select(
+                    "Select a script (optional):", choices=choices
+                ).ask()
             else:
                 click.echo("\nAvailable scripts:")
                 script_list = sorted(scripts.keys())
@@ -290,11 +299,15 @@ def init(
             else:
                 click.echo(f"\nRunning {script}...")
 
-            result = os.system(
-                f"bash {script_path}"
-                if script.endswith(".sh")
-                else f"powershell -File {script_path}"
-            )
+            import subprocess
+
+            # Use subprocess instead of os.system to avoid shell injection
+            if script.endswith(".sh"):
+                result = subprocess.run(["bash", script_path], check=False)
+            else:
+                result = subprocess.run(
+                    ["powershell", "-File", script_path], check=False
+                )
 
             if result == 0:
                 if ui:
@@ -321,14 +334,14 @@ def context(agent: str) -> None:
     """Create unified context file for an agent"""
     # Set agents_dir to the current working directory for installed tools
     agents_dir: str = os.getcwd()
-    
+
     # If registry not found in current directory, try super_agents subdirectory
     registry_path = os.path.join(agents_dir, "agent_registry.yaml")
     if not os.path.exists(registry_path):
         potential_agent_dir = os.path.join(agents_dir, "super_agents")
         if os.path.exists(potential_agent_dir):
             agents_dir = potential_agent_dir
-    
+
     support: AgentSupport = AgentSupport(agents_dir)
 
     if support.create_agent_context_file(agent):
@@ -343,14 +356,14 @@ def list_agents() -> None:
     """List all super-agents in the system"""
     # Set agents_dir to the current working directory for installed tools
     agents_dir: str = os.getcwd()
-    
+
     # If registry not found in current directory, try super_agents subdirectory
     registry_path = os.path.join(agents_dir, "agent_registry.yaml")
     if not os.path.exists(registry_path):
         potential_agent_dir = os.path.join(agents_dir, "super_agents")
         if os.path.exists(potential_agent_dir):
             agents_dir = potential_agent_dir
-    
+
     support: AgentSupport = AgentSupport(agents_dir)
     agent_specs: Dict[str, Dict[str, Any]] = support.load_agent_specs()
 
@@ -392,14 +405,14 @@ def show_agent(agent: str) -> None:
     """Show detailed information about a super-agent"""
     # Set agents_dir to the current working directory for installed tools
     agents_dir: str = os.getcwd()
-    
+
     # If registry not found in current directory, try super_agents subdirectory
     registry_path = os.path.join(agents_dir, "agent_registry.yaml")
     if not os.path.exists(registry_path):
         potential_agent_dir = os.path.join(agents_dir, "super_agents")
         if os.path.exists(potential_agent_dir):
             agents_dir = potential_agent_dir
-    
+
     support: AgentSupport = AgentSupport(agents_dir)
     agent_specs: Dict[str, Dict[str, Any]] = support.load_agent_specs()
 
@@ -450,14 +463,14 @@ def status() -> None:
     """Show system status"""
     # Set agents_dir to the current working directory for installed tools
     agents_dir: str = os.getcwd()
-    
+
     # If registry not found in current directory, try super_agents subdirectory
     registry_path = os.path.join(agents_dir, "agent_registry.yaml")
     if not os.path.exists(registry_path):
         potential_agent_dir = os.path.join(agents_dir, "super_agents")
         if os.path.exists(potential_agent_dir):
             agents_dir = potential_agent_dir
-    
+
     support: AgentSupport = AgentSupport(agents_dir)
 
     print("\n📊 System Status\n")
@@ -491,14 +504,14 @@ def check() -> None:
     """Check system prerequisites and configuration"""
     # Set agents_dir to the current working directory for installed tools
     agents_dir: str = os.getcwd()
-    
+
     # If registry not found in current directory, try super_agents subdirectory
     registry_path = os.path.join(agents_dir, "agent_registry.yaml")
     if not os.path.exists(registry_path):
         potential_agent_dir = os.path.join(agents_dir, "super_agents")
         if os.path.exists(potential_agent_dir):
             agents_dir = potential_agent_dir
-    
+
     support: AgentSupport = AgentSupport(agents_dir)
 
     print("\n✓ System Check\n")
@@ -567,6 +580,25 @@ if __name__ == "__main__":
     if deps_to_install:
         print("Installing required dependencies...")
         for dep in deps_to_install:
-            os.system(f"pip3 install {dep} -q 2>/dev/null || pip install {dep} -q")
+            import subprocess
+            import sys
+
+            try:
+                # Try pip3 first, then pip as fallback
+                result = subprocess.run(
+                    [sys.executable, "-m", "pip", "install", dep, "-q"],
+                    stderr=subprocess.DEVNULL,
+                    check=False,
+                )
+                if result.returncode != 0:
+                    # If the first attempt failed, try again directly with pip module
+                    subprocess.run(
+                        [sys.executable, "-m", "pip", "install", dep, "-q"],
+                        stderr=subprocess.DEVNULL,
+                        check=False,
+                    )
+            except Exception:
+                # Log the error but continue with other dependencies
+                print(f"Warning: Could not install {dep}")
 
     cli()

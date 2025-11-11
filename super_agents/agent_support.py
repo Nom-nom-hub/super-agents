@@ -7,10 +7,10 @@ Inspired by GitHub Spec Kit's agent-agnostic design pattern.
 """
 
 import os
-import yaml
 import shutil
 from typing import Dict, List, Optional
-from pathlib import Path
+
+import yaml
 
 
 class AgentSupport:
@@ -23,7 +23,9 @@ class AgentSupport:
         Args:
             agents_dir: Path to the agents directory
         """
-        self.agents_dir = os.path.join(agents_dir, "agents")  # The agents directory is the agents subdirectory
+        self.agents_dir = os.path.join(
+            agents_dir, "agents"
+        )  # The agents directory is the agents subdirectory
         self.registry_path = os.path.join(agents_dir, "agent_registry.yaml")
         self.templates_dir = os.path.join(agents_dir, "templates")
         self.registry = self._load_registry()
@@ -68,7 +70,9 @@ class AgentSupport:
     def get_available_agents(self) -> List[str]:
         """Get list of available agents only"""
         available = self.detect_available_agents()
-        return [agent_id for agent_id, is_available in available.items() if is_available]
+        return [
+            agent_id for agent_id, is_available in available.items() if is_available
+        ]
 
     def load_agent_specs(self) -> Dict[str, Dict]:
         """Load all super-agent specifications from YAML files"""
@@ -161,7 +165,12 @@ class AgentSupport:
             raise ValueError(f"Unknown format: {format_type}")
 
     def _generate_markdown_command(
-        self, agent_id: str, cmd_name: str, cmd_desc: str, agent_specs: Dict, agent_config: Dict
+        self,
+        agent_id: str,
+        cmd_name: str,
+        cmd_desc: str,
+        agent_specs: Dict,
+        agent_config: Dict,
     ) -> str:
         """Generate markdown-formatted command"""
         agent_list = self._format_agent_list(agent_specs)
@@ -272,7 +281,7 @@ When you query an agent, you'll get:
 - **Outputs**: What they produce
 - **Delegates To**: Other agents they coordinate with
 """,
-            "delegate-task": f"""# Delegate Task to Super-Agent
+            "delegate-task": """# Delegate Task to Super-Agent
 
 Use this command to assign work to a super-agent and coordinate agent workflows.
 
@@ -358,7 +367,12 @@ Requirements: PostgreSQL backend, async operations
         return content
 
     def _generate_toml_command(
-        self, agent_id: str, cmd_name: str, cmd_desc: str, agent_specs: Dict, agent_config: Dict
+        self,
+        agent_id: str,
+        cmd_name: str,
+        cmd_desc: str,
+        agent_specs: Dict,
+        agent_config: Dict,
     ) -> str:
         """Generate TOML-formatted command"""
         agent_list = self._format_agent_list_toml(agent_specs)
@@ -423,7 +437,9 @@ Available agents:
 """,
         }
 
-        content = commands.get(cmd_name, f"""description = "{cmd_desc}"\nprompt = """""" """)
+        content = commands.get(
+            cmd_name, f"""description = "{cmd_desc}"\nprompt = """ """ """
+        )
 
         return content
 
@@ -468,7 +484,9 @@ Available agents:
 
         return "\n".join(lines)
 
-    def initialize_for_agent(self, agent_id: str, output_dir: Optional[str] = None) -> bool:
+    def initialize_for_agent(
+        self, agent_id: str, output_dir: Optional[str] = None
+    ) -> bool:
         """
         Full initialization for a specific agent
 
@@ -489,7 +507,7 @@ Available agents:
         # Determine output directory - use provided directory or default to current working directory
         if output_dir is None:
             output_dir = os.getcwd()
-        
+
         # Generate agent-specific commands with the specified output directory
         if not self.generate_agent_commands(agent_id, output_dir):
             return False
@@ -500,20 +518,22 @@ Available agents:
         folder = config["folder"]
         actual_output_path = os.path.join(output_dir, folder)
         print(f"✓ Super-agents initialized in {actual_output_path}")
-        print(f"\nNext steps:")
-        print(f"  1. Open {actual_output_path}super-agents-init.{config['file_extension']}")
+        print("\nNext steps:")
+        print(
+            f"  1. Open {actual_output_path}super-agents-init.{config['file_extension']}"
+        )
         print(f"  2. Use commands in your {config['name']} environment")
-        print(f"  3. Start delegating tasks to super-agents!\n")
+        print("  3. Start delegating tasks to super-agents!\n")
 
         return True
 
     def _create_comprehensive_context_files(self, superagents_dir: str, agent_id: str):
         """Create comprehensive context files for superagents workflow"""
         from datetime import datetime
-        
+
         # Load all agent specs to provide complete context
         all_agent_specs = self.load_agent_specs()
-        
+
         # Create main context files in .superagents directory
         context_files = {
             "SYSTEM_CONTEXT.md": f"""# AICODE Labs Super-Agents System Context
@@ -533,9 +553,9 @@ The system consists of specialized AI agents with cognitive reasoning capabiliti
 3. **Learning**: Agents continuously improve based on task outcomes
 4. **Governance**: All activities follow compliance and approval workflows
 """,
-
-            "AGENT_REGISTRY.md": self._generate_agent_registry_markdown(all_agent_specs),
-
+            "AGENT_REGISTRY.md": self._generate_agent_registry_markdown(
+                all_agent_specs
+            ),
             "DELEGATION_WORKFLOWS.md": """# Super-Agents Delegation Workflows
 
 ## Automatic Routing Rules
@@ -546,7 +566,7 @@ When a task matches specific criteria, it is automatically delegated:
 - **Agent**: `backend_engineer`
 - **Capabilities**: API development, database design, business logic
 
-### Frontend/UI Work  
+### Frontend/UI Work
 - **Trigger**: UI components, user interfaces, client-side logic
 - **Agent**: `frontend_engineer`
 - **Capabilities**: UI frameworks, state management, accessibility
@@ -580,14 +600,13 @@ For tasks not matching automatic rules, use:
 ## Multi-Agent Workflows
 Complex tasks may involve multiple agents sequentially:
 1. Product definition → `product_manager`
-2. Design → `ux_designer` 
+2. Design → `ux_designer`
 3. Backend implementation → `backend_engineer`
 4. Frontend implementation → `frontend_engineer`
 5. Security review → `security_engineer`
 6. Quality validation → `qa_engineer`
 7. Deployment → `devops_engineer`
 """,
-
             "COMMUNICATION_PROTOCOL.md": """# Agent Communication Protocol
 
 ## Message Format
@@ -595,7 +614,7 @@ Agents communicate using structured messages:
 ```
 [AGENT_ID] [TASK_STATUS]: [DESCRIPTION]
 - Capabilities Used: [LIST]
-- Decisions Made: [LIST] 
+- Decisions Made: [LIST]
 - Dependencies: [LIST]
 - Next Steps: [LIST]
 ```
@@ -608,13 +627,12 @@ Agents communicate using structured messages:
 
 ## Status Tracking
 - `initialized`: Task received, preparation
-- `working`: Active task execution  
+- `working`: Active task execution
 - `review`: Awaiting review/approval
 - `completed`: Task finished successfully
 - `blocked`: Awaiting input or resolution
 - `failed`: Task could not be completed
 """,
-
             "EXECUTION_GUIDELINES.md": """# Agent Execution Guidelines
 
 ## Task Execution Process
@@ -638,25 +656,22 @@ Agents communicate using structured messages:
 - Escalate issues appropriately
 - Document important decisions
 """,
-
             "KNOWLEDGE_BASE.md": self._generate_knowledge_base(all_agent_specs),
-
             "COMPANY_STRATEGY.md": """# AICODE Labs Company Strategy
 
 ## Mission
 To provide autonomous AI agent solutions that accelerate software development while maintaining quality and governance.
 
-## Vision  
+## Vision
 To create a self-organizing AI workforce that can deliver complete software projects with minimal human intervention.
 
 ## Values
 - **Automation**: Maximize automated task execution
-- **Quality**: Maintain high standards across all deliverables  
+- **Quality**: Maintain high standards across all deliverables
 - **Transparency**: Provide clear visibility into all processes
 - **Collaboration**: Foster effective agent-to-agent coordination
 - **Learning**: Continuously improve based on experience
 """,
-
             "RUNTIME_CONFIG.md": """# Runtime Configuration
 
 ## Lifecycle Management
@@ -664,7 +679,7 @@ To create a self-organizing AI workforce that can deliver complete software proj
 - **Health Checks**: Performed every 30 seconds
 - **Restart Policy**: Always restart on failure
 
-## Governance Settings  
+## Governance Settings
 - Human review required for production deployment
 - Approval thresholds for different environments
 - Audit logging enabled
@@ -672,7 +687,7 @@ To create a self-organizing AI workforce that can deliver complete software proj
 
 ## Resource Allocation
 - Executive agents: 4GB RAM
-- Engineering agents: 8GB RAM  
+- Engineering agents: 8GB RAM
 - AI agents: 12GB RAM
 - Support agents: 2GB RAM
 
@@ -680,64 +695,78 @@ To create a self-organizing AI workforce that can deliver complete software proj
 - Reflection performed daily
 - Decision weighting by role priority
 - Conflict resolution via majority voting
-"""
+""",
         }
 
         for filename, content in context_files.items():
             filepath = os.path.join(superagents_dir, filename)
-            with open(filepath, 'w') as f:
+            with open(filepath, "w") as f:
                 f.write(content)
 
         # Create divisions directory with division-specific context
         divisions_dir = os.path.join(superagents_dir, "divisions")
         os.makedirs(divisions_dir, exist_ok=True)
 
-        for division in ["Executive", "Product", "Engineering", "Quality", "Operations", "Expansion", "Governance"]:
-            division_file = os.path.join(divisions_dir, f"{division.lower()}_guidelines.md")
-            with open(division_file, 'w') as f:
-                f.write(f"""# {division} Division Guidelines
+        for division in [
+            "Executive",
+            "Product",
+            "Engineering",
+            "Quality",
+            "Operations",
+            "Expansion",
+            "Governance",
+        ]:
+            division_file = os.path.join(
+                divisions_dir, f"{division.lower()}_guidelines.md"
+            )
+            with open(division_file, "w") as f:
+                f.write(
+                    f"""# {division} Division Guidelines
 
 ## Role and Responsibilities
 Agents in the {division} division are responsible for:
 
 ## Decision-Making Authority
 - Level 1 decisions: [specify]
-- Level 2 decisions: [specify] 
+- Level 2 decisions: [specify]
 - Escalation requirements: [specify]
 
 ## Coordination Requirements
 - Required consultations: [specify]
 - Reporting obligations: [specify]
 - Communication protocols: [specify]
-""")
+"""
+                )
 
-        print(f"  ✓ Created comprehensive context files in .superagents directory")
+        print("  ✓ Created comprehensive context files in .superagents directory")
 
     def _generate_agent_registry_markdown(self, agent_specs: Dict) -> str:
         """Generate agent registry in markdown format"""
         lines = ["# Super-Agent Registry", ""]
-        
+
         divisions = {}
         for agent_id, spec in agent_specs.items():
-            division = spec.get('division', 'Other')
+            division = spec.get("division", "Other")
             if division not in divisions:
                 divisions[division] = []
             divisions[division].append((agent_id, spec))
-        
+
         for division, agents in divisions.items():
             lines.append(f"## {division} Division")
             lines.append("")
-            
+
             for agent_id, spec in sorted(agents):
                 lines.append(f"### {agent_id}")
                 lines.append(f"- **Title**: {spec.get('title', 'N/A')}")
                 lines.append(f"- **Mission**: {spec.get('mission', 'N/A')}")
-                lines.append(f"- **Capabilities**: {', '.join(spec.get('capabilities', []))}")
+                lines.append(
+                    f"- **Capabilities**: {', '.join(spec.get('capabilities', []))}"
+                )
                 lines.append(f"- **Tools**: {', '.join(spec.get('tools', []))}")
                 lines.append(f"- **Inputs**: {', '.join(spec.get('inputs', []))}")
                 lines.append(f"- **Outputs**: {', '.join(spec.get('outputs', []))}")
                 lines.append("")
-        
+
         return "\n".join(lines)
 
     def _generate_knowledge_base(self, agent_specs: Dict) -> str:
@@ -749,34 +778,38 @@ Agents in the {division} division are responsible for:
             "The AICODE Labs system can handle complex software development tasks through specialized agents.",
             "",
             "## Available Specialized Agents",
-            ""
+            "",
         ]
-        
+
         for agent_id, spec in sorted(agent_specs.items()):
             lines.append(f"### {agent_id}")
             lines.append(f"**Title**: {spec.get('title', 'N/A')}")
             lines.append(f"**Mission**: {spec.get('mission', 'N/A')}")
-            if spec.get('capabilities'):
+            if spec.get("capabilities"):
                 lines.append("**Capabilities**:")
-                for cap in spec['capabilities']:
+                for cap in spec["capabilities"]:
                     lines.append(f"- {cap}")
             lines.append("")
-        
-        lines.extend([
-            "## Cognitive Reasoning",
-            "Agents apply cognitive reasoning including daily reflection, decision weighting, and conflict resolution.",
-            "",
-            "## Autonomous Learning",
-            "Agents continuously improve through experience, learning from task outcomes and feedback.",
-            "",
-            "## Governance & Compliance",
-            "All agent activities follow governance protocols with appropriate approval requirements.",
-            ""
-        ])
-        
+
+        lines.extend(
+            [
+                "## Cognitive Reasoning",
+                "Agents apply cognitive reasoning including daily reflection, decision weighting, and conflict resolution.",
+                "",
+                "## Autonomous Learning",
+                "Agents continuously improve through experience, learning from task outcomes and feedback.",
+                "",
+                "## Governance & Compliance",
+                "All agent activities follow governance protocols with appropriate approval requirements.",
+                "",
+            ]
+        )
+
         return "\n".join(lines)
 
-    def _create_agent_initialization_files(self, agent_id: str, output_dir: Optional[str] = None):
+    def _create_agent_initialization_files(
+        self, agent_id: str, output_dir: Optional[str] = None
+    ):
         """
         Create comprehensive initialization files for the selected agent
         including project context, agent specs, and other necessary resources
@@ -805,13 +838,17 @@ Agents in the {division} division are responsible for:
         agent_profile_path = os.path.join(agent_output_dir, "agent_profile.yaml")
         with open(agent_profile_path, "w") as f:
             import yaml
-            yaml.dump({
-                "id": agent_id,
-                "name": config["name"],
-                "format": config["format"],
-                "folder": config["folder"],
-                "specification": selected_agent_spec or {}
-            }, f)
+
+            yaml.dump(
+                {
+                    "id": agent_id,
+                    "name": config["name"],
+                    "format": config["format"],
+                    "folder": config["folder"],
+                    "specification": selected_agent_spec or {},
+                },
+                f,
+            )
 
         # Create context directory
         context_dir = os.path.join(agent_output_dir, "context")
@@ -821,20 +858,21 @@ Agents in the {division} division are responsible for:
         project_context_path = os.path.join(context_dir, "project_context.json")
         with open(project_context_path, "w") as f:
             import json
+
             project_context = {
                 "project_name": "Default Project",
                 "project_description": "AICODE Labs project",
                 "timeline": {
                     "start_date": "2025-01-01",
                     "end_date": "2025-12-31",
-                    "milestones": []
+                    "milestones": [],
                 },
                 "resources": {
                     "budget": "TBD",
                     "allocated_agents": [agent_id],
-                    "tools": [config.get("cli_tool", "unknown")]
+                    "tools": [config.get("cli_tool", "unknown")],
                 },
-                "status": "initialized"
+                "status": "initialized",
             }
             json.dump(project_context, f, indent=2)
 
@@ -854,12 +892,14 @@ Agents in the {division} division are responsible for:
         agent_specs_path = os.path.join(specs_dir, "agent_specs.yaml")
         with open(agent_specs_path, "w") as f:
             import yaml
+
             yaml.dump(selected_agent_spec or {}, f)
 
         # Create task requirements template
         task_requirements_path = os.path.join(specs_dir, "task_requirements.md")
         with open(task_requirements_path, "w") as f:
-            f.write(f"""# Task Requirements for {agent_id}
+            f.write(
+                f"""# Task Requirements for {agent_id}
 
 ## Current Task Context
 
@@ -881,7 +921,8 @@ Based on your specifications, please produce relevant outputs for your role.
 - Follow established patterns and guidelines
 - Provide comprehensive documentation
 - Ensure quality and best practices
-""")
+"""
+            )
 
         # Create resources directory
         resources_dir = os.path.join(agent_output_dir, "resources")
@@ -891,17 +932,21 @@ Based on your specifications, please produce relevant outputs for your role.
         tools_path = os.path.join(resources_dir, "tools.json")
         with open(tools_path, "w") as f:
             import json
+
             tools = {
                 "primary_cli": config.get("cli_tool", "unknown"),
                 "file_extensions": [config.get("file_extension", "txt")],
-                "available_commands": [cmd["name"] for cmd in self.registry.get("default_commands", [])]
+                "available_commands": [
+                    cmd["name"] for cmd in self.registry.get("default_commands", [])
+                ],
             }
             json.dump(tools, f, indent=2)
 
         # Create dependencies file
         dependencies_path = os.path.join(resources_dir, "dependencies.txt")
         with open(dependencies_path, "w") as f:
-            f.write(f"""# Dependencies for {agent_id}
+            f.write(
+                f"""# Dependencies for {agent_id}
 
 ## Required Tools
 - {config.get("cli_tool", "unknown") or "None specified"}
@@ -917,7 +962,8 @@ Based on your specifications, please produce relevant outputs for your role.
 - Agent specifications
 - Context files
 - Output specifications
-""")
+"""
+            )
 
         # Create workflows directory
         workflows_dir = os.path.join(agent_output_dir, "workflows")
@@ -926,7 +972,8 @@ Based on your specifications, please produce relevant outputs for your role.
         # Create standard operating procedures
         sop_path = os.path.join(workflows_dir, "standard_operating_procedures.md")
         with open(sop_path, "w") as f:
-            f.write(f"""# Standard Operating Procedures for {agent_id}
+            f.write(
+                f"""# Standard Operating Procedures for {agent_id}
 
 ## Role-Specific Procedures
 
@@ -959,12 +1006,14 @@ As a {config['name']} agent, you should follow these procedures when working wit
 - Request help when facing blockers
 - Share relevant insights with the team
 - Follow the delegation and communication protocols
-""")
+"""
+            )
 
         # Create collaboration guidelines
         guidelines_path = os.path.join(workflows_dir, "collaboration_guidelines.md")
         with open(guidelines_path, "w") as f:
-            f.write(f"""# Collaboration Guidelines for {agent_id}
+            f.write(
+                f"""# Collaboration Guidelines for {agent_id}
 
 ## Working with Other Agents
 
@@ -984,7 +1033,8 @@ As a {config['name']} agent, you may need to collaborate with other agents in th
 - Document decisions and rationale
 - Share insights that may benefit other agents
 - Maintain proper access controls for sensitive information
-""")
+"""
+            )
 
         # Create templates directory
         templates_dir = os.path.join(agent_output_dir, "templates")
@@ -993,7 +1043,8 @@ As a {config['name']} agent, you may need to collaborate with other agents in th
         # Create response template for the agent
         response_template_path = os.path.join(templates_dir, "response_template.md")
         with open(response_template_path, "w") as f:
-            f.write(f"""# Response Template for {agent_id}
+            f.write(
+                f"""# Response Template for {agent_id}
 
 ## Structure for {config['name']} Agent Responses
 
@@ -1032,7 +1083,7 @@ When responding to tasks as a {config['name']} agent, structure your responses u
 
 ### For Engineering Agents (Backend, Frontend, AI, DevOps):
 - Detail technical implementation
-- Document architecture decisions  
+- Document architecture decisions
 - Specify performance considerations
 - Outline integration points
 
@@ -1047,19 +1098,23 @@ When responding to tasks as a {config['name']} agent, structure your responses u
 - Document test results
 - Specify performance metrics
 - Outline monitoring setup
-""")
+"""
+            )
 
         # Create division-specific files based on the selected agent
         if selected_agent_spec:
             division = selected_agent_spec.get("division", "Other")
-            
+
             division_dir = os.path.join(agent_output_dir, "division_specific")
             os.makedirs(division_dir, exist_ok=True)
-            
+
             # Create division-specific context
-            division_context_path = os.path.join(division_dir, f"{division.lower()}_context.md")
+            division_context_path = os.path.join(
+                division_dir, f"{division.lower()}_context.md"
+            )
             with open(division_context_path, "w") as f:
-                f.write(f"""# Division Context: {division}
+                f.write(
+                    f"""# Division Context: {division}
 
 ## Role within {division} Division
 
@@ -1069,26 +1124,33 @@ As an agent in the {division} division, you are expected to:
 - {(selected_agent_spec or {}).get('mission', 'No mission specified')}
 
 ### Key Capabilities
-""")
-                for capability in (selected_agent_spec or {}).get('capabilities', []):
+"""
+                )
+                for capability in (selected_agent_spec or {}).get("capabilities", []):
                     f.write(f"- {capability}\n")
-                
-                f.write(f"""
+
+                f.write(
+                    """
 ### Tools and Technologies
-""")
-                for tool in (selected_agent_spec or {}).get('tools', []):
+"""
+                )
+                for tool in (selected_agent_spec or {}).get("tools", []):
                     f.write(f"- {tool}\n")
-                
-                f.write(f"""
+
+                f.write(
+                    """
 ### Input Requirements
-""")
-                for input_type in (selected_agent_spec or {}).get('inputs', []):
+"""
+                )
+                for input_type in (selected_agent_spec or {}).get("inputs", []):
                     f.write(f"- {input_type}\n")
-                
-                f.write(f"""
+
+                f.write(
+                    """
 ### Expected Outputs
-""")
-                for output_type in (selected_agent_spec or {}).get('outputs', []):
+"""
+                )
+                for output_type in (selected_agent_spec or {}).get("outputs", []):
                     f.write(f"- {output_type}\n")
 
         print(f"  ✓ Created comprehensive initialization files for {agent_id}")
@@ -1103,7 +1165,9 @@ As an agent in the {division} division, you are expected to:
         available = self.get_available_agents()
         count = 0
 
-        print(f"\n🤖 Initializing Super-Agents for {len(available)} available agents...\n")
+        print(
+            f"\n🤖 Initializing Super-Agents for {len(available)} available agents...\n"
+        )
 
         for agent_id in available:
             if self.generate_agent_commands(agent_id):

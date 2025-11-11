@@ -160,7 +160,7 @@ class SuperAgentsUI:
                     if ord(key) == 27:  # ESC
                         # Read the rest of the escape sequence for arrow keys
                         next1 = sys.stdin.read(1)
-                        if next1 == '[':  # Arrow key sequence
+                        if next1 == "[":  # Arrow key sequence
                             arrow = sys.stdin.read(1)
                             if arrow == "A":  # Up arrow
                                 current_selection = (current_selection - 1) % len(items)
@@ -178,9 +178,9 @@ class SuperAgentsUI:
                         # Move selection up as a fallback
                         current_selection = (current_selection - 1) % len(items)
                     # Add any other key as a navigation key
-                    elif key.lower() == 'j':  # j for down
+                    elif key.lower() == "j":  # j for down
                         current_selection = (current_selection + 1) % len(items)
-                    elif key.lower() == 'k':  # k for up
+                    elif key.lower() == "k":  # k for up
                         current_selection = (current_selection - 1) % len(items)
                 finally:
                     termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)

@@ -408,7 +408,9 @@ This workflow is automatically used when user requests include:
 
 def main():
     """Example usage"""
-    generator = DelegationPromptGenerator("/Users/teck/Desktop/super-agents/super_agents")
+    generator = DelegationPromptGenerator(
+        "/Users/teck/Desktop/super-agents/super_agents"
+    )
 
     # Generate universal prompt
     prompt = generator.generate_delegation_system_prompt("markdown")
@@ -423,7 +425,12 @@ def main():
 
     # Generate all prompts to files
     print("\n=== GENERATING ALL PROMPTS ===\n")
-    generator.generate_all_prompts("/tmp/delegation_prompts")
+    import os
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        temp_output_path = os.path.join(temp_dir, "delegation_prompts")
+        generator.generate_all_prompts(temp_output_path)
 
 
 if __name__ == "__main__":

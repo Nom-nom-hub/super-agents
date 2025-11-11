@@ -31,9 +31,11 @@ class ExecutionTracker:
         self.agents_dir = agents_dir
         self.execution_logs_dir = os.path.join(agents_dir, "agents", ".execution_logs")
         Path(self.execution_logs_dir).mkdir(parents=True, exist_ok=True)
-        
+
         # Initialize structured logging
-        self.logger = get_logger(self.__class__.__name__, log_dir=os.path.join(agents_dir, "logs"))
+        self.logger = get_logger(
+            self.__class__.__name__, log_dir=os.path.join(agents_dir, "logs")
+        )
 
     def start_execution(self, agent_id: str, task: str) -> str:
         """
@@ -47,9 +49,13 @@ class ExecutionTracker:
             Execution ID for reference
         """
         execution_id = f"exec_{agent_id}_{int(time.time() * 1000)}"
-        
-        self.logger.info(f"Starting execution tracking for {agent_id}: {task}", 
-                        execution_id=execution_id, agent_id=agent_id, task=task)
+
+        self.logger.info(
+            f"Starting execution tracking for {agent_id}: {task}",
+            execution_id=execution_id,
+            agent_id=agent_id,
+            task=task,
+        )
 
         self.current_execution = {
             "execution_id": execution_id,
@@ -77,7 +83,9 @@ class ExecutionTracker:
     def record_tool_usage(self, tool_name: str, context: Optional[str] = None):
         """Record a tool being used during execution"""
         if not hasattr(self, "current_execution"):
-            self.logger.warning("No current execution to record tool usage", tool_name=tool_name)
+            self.logger.warning(
+                "No current execution to record tool usage", tool_name=tool_name
+            )
             return
 
         self.current_execution["tools_used"].append(
@@ -87,13 +95,17 @@ class ExecutionTracker:
                 "timestamp": datetime.now().isoformat(),
             }
         )
-        
-        self.logger.debug(f"Recorded tool usage: {tool_name}", tool_name=tool_name, context=context)
+
+        self.logger.debug(
+            f"Recorded tool usage: {tool_name}", tool_name=tool_name, context=context
+        )
 
     def record_decision(self, decision: str, rationale: Optional[str] = None):
         """Record a decision made during execution"""
         if not hasattr(self, "current_execution"):
-            self.logger.warning("No current execution to record decision", decision=decision)
+            self.logger.warning(
+                "No current execution to record decision", decision=decision
+            )
             return
 
         self.current_execution["decisions_made"].append(
@@ -103,13 +115,17 @@ class ExecutionTracker:
                 "timestamp": datetime.now().isoformat(),
             }
         )
-        
-        self.logger.debug(f"Recorded decision: {decision}", decision=decision, rationale=rationale)
+
+        self.logger.debug(
+            f"Recorded decision: {decision}", decision=decision, rationale=rationale
+        )
 
     def record_blocker(self, blocker: str, resolution: Optional[str] = None):
         """Record a blocker encountered"""
         if not hasattr(self, "current_execution"):
-            self.logger.warning("No current execution to record blocker", blocker=blocker)
+            self.logger.warning(
+                "No current execution to record blocker", blocker=blocker
+            )
             return
 
         self.current_execution["blockers_encountered"].append(
@@ -119,13 +135,17 @@ class ExecutionTracker:
                 "timestamp": datetime.now().isoformat(),
             }
         )
-        
-        self.logger.info(f"Recorded blocker: {blocker}", blocker=blocker, resolution=resolution)
+
+        self.logger.info(
+            f"Recorded blocker: {blocker}", blocker=blocker, resolution=resolution
+        )
 
     def record_output(self, output_path: str, description: Optional[str] = None):
         """Record an output file created"""
         if not hasattr(self, "current_execution"):
-            self.logger.warning("No current execution to record output", output_path=output_path)
+            self.logger.warning(
+                "No current execution to record output", output_path=output_path
+            )
             return
 
         self.current_execution["outputs_created"].append(
@@ -135,8 +155,12 @@ class ExecutionTracker:
                 "timestamp": datetime.now().isoformat(),
             }
         )
-        
-        self.logger.info(f"Recorded output: {output_path}", output_path=output_path, description=description)
+
+        self.logger.info(
+            f"Recorded output: {output_path}",
+            output_path=output_path,
+            description=description,
+        )
 
     def record_metrics(self, **kwargs):
         """Record success metrics"""
@@ -165,11 +189,14 @@ class ExecutionTracker:
             return {}
 
         agent_id = self.current_execution.get("agent_id", "unknown")
-        task = self.current_execution.get("task", "unknown")
         execution_id = self.current_execution.get("execution_id", "unknown")
-        
-        self.logger.info(f"Ending execution for {agent_id}: {status}", 
-                        agent_id=agent_id, status=status, execution_id=execution_id)
+
+        self.logger.info(
+            f"Ending execution for {agent_id}: {status}",
+            agent_id=agent_id,
+            status=status,
+            execution_id=execution_id,
+        )
 
         self.current_execution["timestamp_end"] = datetime.now().isoformat()
         start_time = datetime.fromisoformat(self.current_execution["timestamp_start"])
@@ -184,11 +211,13 @@ class ExecutionTracker:
 
         # Save to file
         execution_log = self._save_execution_log(self.current_execution)
-        
-        self.logger.info(f"Execution completed: {execution_id}", 
-                        execution_id=execution_id, 
-                        duration_seconds=self.current_execution["duration_seconds"],
-                        status=status)
+
+        self.logger.info(
+            f"Execution completed: {execution_id}",
+            execution_id=execution_id,
+            duration_seconds=self.current_execution["duration_seconds"],
+            status=status,
+        )
 
         return execution_log
 

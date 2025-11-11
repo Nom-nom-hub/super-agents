@@ -16,7 +16,9 @@ from typing import Dict, List, Optional
 import yaml
 
 # Import the structured logging module
-from .structured_logging import get_logger, log_agent_execution, log_agent_decision, log_agent_tool_usage, log_system_event
+from .structured_logging import (
+    get_logger,
+)
 
 # Import the delegation prompt generator for intelligent routing
 try:
@@ -72,7 +74,9 @@ class AgentSupport:
         self.registry = self._load_registry()
 
         # Initialize structured logging
-        self.logger = get_logger(self.__class__.__name__, log_dir=os.path.join(agents_dir, "logs"))
+        self.logger = get_logger(
+            self.__class__.__name__, log_dir=os.path.join(agents_dir, "logs")
+        )
 
         # Initialize delegation prompt generator if available
         self.delegation_generator = None
@@ -169,8 +173,10 @@ class AgentSupport:
         Returns:
             True if successful, False otherwise
         """
-        self.logger.info(f"Starting command generation for agent: {agent_id}", agent_id=agent_id)
-        
+        self.logger.info(
+            f"Starting command generation for agent: {agent_id}", agent_id=agent_id
+        )
+
         config = self.get_agent_config(agent_id)
         if not config:
             self.logger.error(f"Unknown agent requested: {agent_id}")
@@ -186,13 +192,17 @@ class AgentSupport:
 
         # Get default commands
         default_commands = self.registry.get("default_commands", [])
-        self.logger.debug(f"Found {len(default_commands)} default commands to generate", 
-                         default_command_count=len(default_commands))
+        self.logger.debug(
+            f"Found {len(default_commands)} default commands to generate",
+            default_command_count=len(default_commands),
+        )
 
         # Load super-agent specs for context
         agent_specs = self.load_agent_specs()
-        self.logger.debug(f"Loaded {len(agent_specs)} agent specifications for context generation", 
-                         agent_spec_count=len(agent_specs))
+        self.logger.debug(
+            f"Loaded {len(agent_specs)} agent specifications for context generation",
+            agent_spec_count=len(agent_specs),
+        )
 
         # Generate each command
         for cmd in default_commands:
@@ -208,10 +218,16 @@ class AgentSupport:
             with open(filepath, "w") as f:
                 f.write(content)
 
-            self.logger.info(f"Generated command file: {cmd_name}.{file_ext}", 
-                           command_name=cmd_name, file_extension=file_ext, agent_name=config['name'])
+            self.logger.info(
+                f"Generated command file: {cmd_name}.{file_ext}",
+                command_name=cmd_name,
+                file_extension=file_ext,
+                agent_name=config["name"],
+            )
 
-        self.logger.info(f"Completed command generation for agent: {agent_id}", agent_id=agent_id)
+        self.logger.info(
+            f"Completed command generation for agent: {agent_id}", agent_id=agent_id
+        )
         return True
 
     def _generate_command_content(
@@ -566,14 +582,18 @@ Available agents:
         Returns:
             True if successful
         """
-        self.logger.info(f"Starting initialization for agent: {agent_id}", agent_id=agent_id)
-        
+        self.logger.info(
+            f"Starting initialization for agent: {agent_id}", agent_id=agent_id
+        )
+
         config = self.get_agent_config(agent_id)
         if not config:
             self.logger.error(f"Unknown agent requested for initialization: {agent_id}")
             return False
 
-        self.logger.info(f"Initializing Super-Agents for {config['name']}", agent_name=config['name'])
+        self.logger.info(
+            f"Initializing Super-Agents for {config['name']}", agent_name=config["name"]
+        )
 
         # Generate agent-specific commands
         if not self.generate_agent_commands(agent_id):
@@ -586,7 +606,9 @@ Available agents:
 
         folder = config["folder"]
         self.logger.info(f"Super-agents initialized in {folder}", folder=folder)
-        self.logger.info("Initialization completed successfully", agent_id=agent_id, folder=folder)
+        self.logger.info(
+            "Initialization completed successfully", agent_id=agent_id, folder=folder
+        )
 
         return True
 
@@ -1133,36 +1155,57 @@ As an agent in the {division} division, you are expected to:
             Execution ID, or None if tracking unavailable
         """
         if not self.execution_tracker:
-            self.logger.warning("Execution tracker not available", agent_id=agent_id, task=task)
+            self.logger.warning(
+                "Execution tracker not available", agent_id=agent_id, task=task
+            )
             return None
 
-        self.logger.info(f"Starting execution tracking for {agent_id}: {task}", 
-                        agent_id=agent_id, task=task)
+        self.logger.info(
+            f"Starting execution tracking for {agent_id}: {task}",
+            agent_id=agent_id,
+            task=task,
+        )
         return self.execution_tracker.start_execution(agent_id, task)
 
     def track_execution_tool(self, tool_name: str, context: Optional[str] = None):
         """Record tool usage during execution"""
         if self.execution_tracker:
             self.execution_tracker.record_tool_usage(tool_name, context)
-            self.logger.info(f"Recorded tool usage: {tool_name}", tool_name=tool_name, context=context)
+            self.logger.info(
+                f"Recorded tool usage: {tool_name}",
+                tool_name=tool_name,
+                context=context,
+            )
         else:
-            self.logger.warning("Execution tracker not available for tool recording", tool_name=tool_name)
+            self.logger.warning(
+                "Execution tracker not available for tool recording",
+                tool_name=tool_name,
+            )
 
     def track_execution_decision(self, decision: str, rationale: Optional[str] = None):
         """Record a decision during execution"""
         if self.execution_tracker:
             self.execution_tracker.record_decision(decision, rationale)
-            self.logger.info(f"Recorded decision: {decision}", decision=decision, rationale=rationale)
+            self.logger.info(
+                f"Recorded decision: {decision}", decision=decision, rationale=rationale
+            )
         else:
-            self.logger.warning("Execution tracker not available for decision recording", decision=decision)
+            self.logger.warning(
+                "Execution tracker not available for decision recording",
+                decision=decision,
+            )
 
     def track_execution_blocker(self, blocker: str, resolution: Optional[str] = None):
         """Record a blocker encountered"""
         if self.execution_tracker:
             self.execution_tracker.record_blocker(blocker, resolution)
-            self.logger.info(f"Recorded blocker: {blocker}", blocker=blocker, resolution=resolution)
+            self.logger.info(
+                f"Recorded blocker: {blocker}", blocker=blocker, resolution=resolution
+            )
         else:
-            self.logger.warning("Execution tracker not available for blocker recording", blocker=blocker)
+            self.logger.warning(
+                "Execution tracker not available for blocker recording", blocker=blocker
+            )
 
     def track_execution_output(
         self, output_path: str, description: Optional[str] = None
@@ -1170,9 +1213,16 @@ As an agent in the {division} division, you are expected to:
         """Record an output file created"""
         if self.execution_tracker:
             self.execution_tracker.record_output(output_path, description)
-            self.logger.info(f"Recorded output: {output_path}", output_path=output_path, description=description)
+            self.logger.info(
+                f"Recorded output: {output_path}",
+                output_path=output_path,
+                description=description,
+            )
         else:
-            self.logger.warning("Execution tracker not available for output recording", output_path=output_path)
+            self.logger.warning(
+                "Execution tracker not available for output recording",
+                output_path=output_path,
+            )
 
     def track_execution_metrics(self, **kwargs):
         """Record success metrics"""
@@ -1180,7 +1230,9 @@ As an agent in the {division} division, you are expected to:
             self.execution_tracker.record_metrics(**kwargs)
             self.logger.info("Recorded execution metrics", metrics=kwargs)
         else:
-            self.logger.warning("Execution tracker not available for metrics recording", metrics=kwargs)
+            self.logger.warning(
+                "Execution tracker not available for metrics recording", metrics=kwargs
+            )
 
     def end_execution_and_learn(
         self, agent_id: str, status: str = "completed", result: Optional[Dict] = None
@@ -1199,24 +1251,31 @@ As an agent in the {division} division, you are expected to:
         Returns:
             Learning cycle result
         """
-        self.logger.info(f"Starting learning cycle for agent: {agent_id}", 
-                        agent_id=agent_id, execution_status=status)
-        
+        self.logger.info(
+            f"Starting learning cycle for agent: {agent_id}",
+            agent_id=agent_id,
+            execution_status=status,
+        )
+
         if (
             not self.execution_tracker
             or not self.reflection_agent
             or not self.spec_manager
         ):
-            self.logger.error("Required components not available for learning cycle", 
-                             has_execution_tracker=self.execution_tracker is not None,
-                             has_reflection_agent=self.reflection_agent is not None,
-                             has_spec_manager=self.spec_manager is not None)
+            self.logger.error(
+                "Required components not available for learning cycle",
+                has_execution_tracker=self.execution_tracker is not None,
+                has_reflection_agent=self.reflection_agent is not None,
+                has_spec_manager=self.spec_manager is not None,
+            )
             return {"success": False, "message": "Spec regeneration not available"}
 
         try:
             # 1. End execution and get log
             execution_log = self.execution_tracker.end_execution(status, result)
-            self.logger.debug("Execution ended, retrieving log", execution_status=status)
+            self.logger.debug(
+                "Execution ended, retrieving log", execution_status=status
+            )
 
             if not execution_log:
                 self.logger.error("Failed to record execution in tracker")
@@ -1224,15 +1283,21 @@ As an agent in the {division} division, you are expected to:
 
             # 2. Export for reflection
             execution_data = self.execution_tracker.export_for_reflection(agent_id)
-            self.logger.debug("Exported execution data for reflection", 
-                            execution_count=len(execution_data.get('all_executions', [])))
+            self.logger.debug(
+                "Exported execution data for reflection",
+                execution_count=len(execution_data.get("all_executions", [])),
+            )
 
             # 3. Run reflection to extract learnings
             learnings = self.reflection_agent.analyze_executions(
                 agent_id, execution_data
             )
-            self.logger.info(f"Reflection analysis completed, extracted {len(learnings.get('tools_discovered', {}).get('new_tools', []))} tools", 
-                           tool_count=len(learnings.get('tools_discovered', {}).get('new_tools', [])))
+            self.logger.info(
+                f"Reflection analysis completed, extracted {len(learnings.get('tools_discovered', {}).get('new_tools', []))} tools",
+                tool_count=len(
+                    learnings.get("tools_discovered", {}).get("new_tools", [])
+                ),
+            )
 
             # 4. Validate changes
             current_spec = self.spec_manager.load_agent_spec(agent_id)
@@ -1240,7 +1305,10 @@ As an agent in the {division} division, you are expected to:
                 current_spec,
                 self.reflection_agent.generate_spec_update(current_spec, learnings),
             )
-            self.logger.debug("Spec changes validated", requires_review=change_validation.get('requires_review'))
+            self.logger.debug(
+                "Spec changes validated",
+                requires_review=change_validation.get("requires_review"),
+            )
 
             # 5. Regenerate spec
             success, updated_spec, governance_note = self.spec_manager.regenerate_spec(
@@ -1257,12 +1325,17 @@ As an agent in the {division} division, you are expected to:
                     self.delegation_generator.agent_specs = self.load_agent_specs()
                     self.logger.debug("Delegation generator agent specs refreshed")
                 except Exception:
-                    self.logger.warning("Failed to refresh delegation generator specs (non-critical)")
+                    self.logger.warning(
+                        "Failed to refresh delegation generator specs (non-critical)"
+                    )
 
             # 7. Log completion message
             new_version = updated_spec.get("version", 1)
-            self.logger.info(f"Autonomous Learning: Spec regeneration completed for {agent_id}, now at v{new_version}",
-                           agent_id=agent_id, new_version=new_version)
+            self.logger.info(
+                f"Autonomous Learning: Spec regeneration completed for {agent_id}, now at v{new_version}",
+                agent_id=agent_id,
+                new_version=new_version,
+            )
 
             result = {
                 "success": True,
@@ -1279,9 +1352,12 @@ As an agent in the {division} division, you are expected to:
                 "changes": change_validation.get("change_summary"),
                 "governance_note": governance_note,
             }
-            
-            self.logger.info(f"Learning cycle completed successfully for agent {agent_id}", 
-                           agent_id=agent_id, spec_version=new_version)
+
+            self.logger.info(
+                f"Learning cycle completed successfully for agent {agent_id}",
+                agent_id=agent_id,
+                spec_version=new_version,
+            )
             return result
 
         except Exception as e:
