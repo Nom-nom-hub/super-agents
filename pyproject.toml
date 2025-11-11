@@ -27,7 +27,7 @@ dependencies = [
 ]
 
 [project.scripts]
-aicode = "cli:cli"
+aicode = "company.cli:cli"
 
 [project.urls]
 Homepage = "https://github.com/Nom-nom-hub/super-agents"

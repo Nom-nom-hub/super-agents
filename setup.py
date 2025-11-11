@@ -17,7 +17,7 @@ setup(
     url="https://github.com/Nom-nom-hub/super-agents",
     packages=find_packages(where="company"),
     package_data={
-        '': ['*.yaml', '*.md', '*.txt'],
+        'company': ['agent_registry.yaml', 'agents/*.yaml', 'agents/*.md', 'scripts/*.sh', 'scripts/*.ps1'],
     },
     install_requires=requirements,
     entry_points={
