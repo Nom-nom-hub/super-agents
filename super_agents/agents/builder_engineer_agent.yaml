@@ -3,8 +3,8 @@ title: Spec Builder Agent
 mission: >
   Convert YAML/MD specs into runnable codebases, manage dependencies, generation logs.
 inputs:
-  - /company/agents/**/*.yaml
-  - /company/agents/**/*.md
+  - /super_agents/agents/**/*.yaml
+  - /super_agents/agents/**/*.md
 outputs:
   - generated_codebase/
 capabilities:

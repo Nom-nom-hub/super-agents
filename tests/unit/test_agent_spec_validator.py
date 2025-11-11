@@ -9,7 +9,7 @@ import json
 import pytest
 from unittest.mock import patch
 
-from company.agent_spec_validator import AgentSpecValidator
+from super_agents.core.agent_spec_validator import AgentSpecValidator
 
 
 class TestAgentSpecValidator:

@@ -9,7 +9,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 import yaml
 
-from company.delegation_prompt_generator import DelegationPromptGenerator
+from super_agents.core.delegation_prompt_generator import DelegationPromptGenerator
 
 
 class TestDelegationPromptGenerator:
@@ -29,7 +29,7 @@ class TestDelegationPromptGenerator:
 
     def test_initialization(self):
         """Test DelegationPromptGenerator initialization"""
-        assert self.generator.company_dir == self.temp_dir
+        assert self.generator.agents_dir == self.temp_dir
         assert hasattr(self.generator, 'intent_mapping_path')
         assert hasattr(self.generator, 'agents_dir')
         assert hasattr(self.generator, 'intent_mapping')

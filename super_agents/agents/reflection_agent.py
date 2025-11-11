@@ -19,8 +19,8 @@ from typing import Dict, List, Optional
 class ReflectionAgent:
     """Analyzes executions and generates spec recommendations"""
 
-    def __init__(self, company_dir: str = "."):
-        self.company_dir = company_dir
+    def __init__(self, agents_dir: str = "."):
+        self.agents_dir = agents_dir
 
     def analyze_executions(self, agent_id: str, execution_data: Dict) -> Dict:
         """

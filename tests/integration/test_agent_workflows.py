@@ -10,11 +10,11 @@ import pytest
 import yaml
 from unittest.mock import patch
 
-from company.agent_support import AgentSupport
-from company.reflection_agent import ReflectionAgent
-from company.execution_tracker import ExecutionTracker
-from company.autonomous_spec_manager import AutonomousSpecManager
-from company.delegation_prompt_generator import DelegationPromptGenerator
+from super_agents.agent_support import AgentSupport
+from super_agents.agents.reflection_agent import ReflectionAgent
+from super_agents.core.execution_tracker import ExecutionTracker
+from super_agents.core.autonomous_spec_manager import AutonomousSpecManager
+from super_agents.core.delegation_prompt_generator import DelegationPromptGenerator
 
 
 class TestAgentWorkflowsIntegration:

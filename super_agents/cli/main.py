@@ -80,17 +80,17 @@ def cli() -> None:
 @cli.command()
 def detect() -> None:
     """Detect available AI agents on system"""
-    # Set company_dir to the current working directory for installed tools
-    company_dir: str = os.getcwd()
+    # Set agents_dir to the current working directory for installed tools
+    agents_dir: str = os.getcwd()
     
     # If registry not found in current directory, try super_agents subdirectory
-    registry_path = os.path.join(company_dir, "agent_registry.yaml")
+    registry_path = os.path.join(agents_dir, "agent_registry.yaml")
     if not os.path.exists(registry_path):
-        potential_agent_dir = os.path.join(company_dir, "super_agents")
+        potential_agent_dir = os.path.join(agents_dir, "super_agents")
         if os.path.exists(potential_agent_dir):
-            company_dir = potential_agent_dir
+            agents_dir = potential_agent_dir
     
-    support: AgentSupport = AgentSupport(company_dir)
+    support: AgentSupport = AgentSupport(agents_dir)
     available: Dict[str, bool] = support.detect_available_agents()
 
     print("\n📊 AI Agent Detection Report\n")
@@ -140,18 +140,18 @@ def init(
     agent: Optional[str], init_all: bool, script: Optional[str], project: Optional[str]
 ) -> None:
     """Initialize super-agents for AI agents with comprehensive context files"""
-    # Set company_dir to the current working directory for installed tools
+    # Set agents_dir to the current working directory for installed tools
     # This ensures files are created where the user runs the command
-    company_dir = os.getcwd()
+    agents_dir = os.getcwd()
     
     # If registry not found in current directory, try super_agents subdirectory
-    registry_path = os.path.join(company_dir, "agent_registry.yaml")
+    registry_path = os.path.join(agents_dir, "agent_registry.yaml")
     if not os.path.exists(registry_path):
-        potential_agent_dir = os.path.join(company_dir, "super_agents")
+        potential_agent_dir = os.path.join(agents_dir, "super_agents")
         if os.path.exists(potential_agent_dir):
-            company_dir = potential_agent_dir
+            agents_dir = potential_agent_dir
     
-    support = AgentSupport(company_dir)
+    support = AgentSupport(agents_dir)
     ui = SuperAgentsUI() if HAS_RICH else None
 
     if not agent and not init_all:
@@ -319,17 +319,17 @@ def init(
 @click.option("--agent", "-a", required=True, help="Agent to generate context for")
 def context(agent: str) -> None:
     """Create unified context file for an agent"""
-    # Set company_dir to the current working directory for installed tools
-    company_dir: str = os.getcwd()
+    # Set agents_dir to the current working directory for installed tools
+    agents_dir: str = os.getcwd()
     
     # If registry not found in current directory, try super_agents subdirectory
-    registry_path = os.path.join(company_dir, "agent_registry.yaml")
+    registry_path = os.path.join(agents_dir, "agent_registry.yaml")
     if not os.path.exists(registry_path):
-        potential_agent_dir = os.path.join(company_dir, "super_agents")
+        potential_agent_dir = os.path.join(agents_dir, "super_agents")
         if os.path.exists(potential_agent_dir):
-            company_dir = potential_agent_dir
+            agents_dir = potential_agent_dir
     
-    support: AgentSupport = AgentSupport(company_dir)
+    support: AgentSupport = AgentSupport(agents_dir)
 
     if support.create_agent_context_file(agent):
         click.secho(f"✓ Context file created for {agent}", fg="green")
@@ -341,17 +341,17 @@ def context(agent: str) -> None:
 @cli.command()
 def list_agents() -> None:
     """List all super-agents in the system"""
-    # Set company_dir to the current working directory for installed tools
-    company_dir: str = os.getcwd()
+    # Set agents_dir to the current working directory for installed tools
+    agents_dir: str = os.getcwd()
     
     # If registry not found in current directory, try super_agents subdirectory
-    registry_path = os.path.join(company_dir, "agent_registry.yaml")
+    registry_path = os.path.join(agents_dir, "agent_registry.yaml")
     if not os.path.exists(registry_path):
-        potential_agent_dir = os.path.join(company_dir, "super_agents")
+        potential_agent_dir = os.path.join(agents_dir, "super_agents")
         if os.path.exists(potential_agent_dir):
-            company_dir = potential_agent_dir
+            agents_dir = potential_agent_dir
     
-    support: AgentSupport = AgentSupport(company_dir)
+    support: AgentSupport = AgentSupport(agents_dir)
     agent_specs: Dict[str, Dict[str, Any]] = support.load_agent_specs()
 
     if not agent_specs:
@@ -390,17 +390,17 @@ def list_agents() -> None:
 @click.option("--agent", "-a", required=True, help="Agent to show help for")
 def show_agent(agent: str) -> None:
     """Show detailed information about a super-agent"""
-    # Set company_dir to the current working directory for installed tools
-    company_dir: str = os.getcwd()
+    # Set agents_dir to the current working directory for installed tools
+    agents_dir: str = os.getcwd()
     
     # If registry not found in current directory, try super_agents subdirectory
-    registry_path = os.path.join(company_dir, "agent_registry.yaml")
+    registry_path = os.path.join(agents_dir, "agent_registry.yaml")
     if not os.path.exists(registry_path):
-        potential_agent_dir = os.path.join(company_dir, "super_agents")
+        potential_agent_dir = os.path.join(agents_dir, "super_agents")
         if os.path.exists(potential_agent_dir):
-            company_dir = potential_agent_dir
+            agents_dir = potential_agent_dir
     
-    support: AgentSupport = AgentSupport(company_dir)
+    support: AgentSupport = AgentSupport(agents_dir)
     agent_specs: Dict[str, Dict[str, Any]] = support.load_agent_specs()
 
     if agent not in agent_specs:
@@ -448,17 +448,17 @@ def show_agent(agent: str) -> None:
 @cli.command()
 def status() -> None:
     """Show system status"""
-    # Set company_dir to the current working directory for installed tools
-    company_dir: str = os.getcwd()
+    # Set agents_dir to the current working directory for installed tools
+    agents_dir: str = os.getcwd()
     
     # If registry not found in current directory, try super_agents subdirectory
-    registry_path = os.path.join(company_dir, "agent_registry.yaml")
+    registry_path = os.path.join(agents_dir, "agent_registry.yaml")
     if not os.path.exists(registry_path):
-        potential_agent_dir = os.path.join(company_dir, "super_agents")
+        potential_agent_dir = os.path.join(agents_dir, "super_agents")
         if os.path.exists(potential_agent_dir):
-            company_dir = potential_agent_dir
+            agents_dir = potential_agent_dir
     
-    support: AgentSupport = AgentSupport(company_dir)
+    support: AgentSupport = AgentSupport(agents_dir)
 
     print("\n📊 System Status\n")
     print("=" * 60)
@@ -489,17 +489,17 @@ def status() -> None:
 @cli.command()
 def check() -> None:
     """Check system prerequisites and configuration"""
-    # Set company_dir to the current working directory for installed tools
-    company_dir: str = os.getcwd()
+    # Set agents_dir to the current working directory for installed tools
+    agents_dir: str = os.getcwd()
     
     # If registry not found in current directory, try super_agents subdirectory
-    registry_path = os.path.join(company_dir, "agent_registry.yaml")
+    registry_path = os.path.join(agents_dir, "agent_registry.yaml")
     if not os.path.exists(registry_path):
-        potential_agent_dir = os.path.join(company_dir, "super_agents")
+        potential_agent_dir = os.path.join(agents_dir, "super_agents")
         if os.path.exists(potential_agent_dir):
-            company_dir = potential_agent_dir
+            agents_dir = potential_agent_dir
     
-    support: AgentSupport = AgentSupport(company_dir)
+    support: AgentSupport = AgentSupport(agents_dir)
 
     print("\n✓ System Check\n")
     print("=" * 60)

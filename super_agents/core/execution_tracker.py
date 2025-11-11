@@ -27,13 +27,13 @@ from .structured_logging import get_logger
 class ExecutionTracker:
     """Tracks agent executions for autonomous learning"""
 
-    def __init__(self, company_dir: str = "."):
-        self.company_dir = company_dir
-        self.execution_logs_dir = os.path.join(company_dir, "agents", ".execution_logs")
+    def __init__(self, agents_dir: str = "."):
+        self.agents_dir = agents_dir
+        self.execution_logs_dir = os.path.join(agents_dir, "agents", ".execution_logs")
         Path(self.execution_logs_dir).mkdir(parents=True, exist_ok=True)
         
         # Initialize structured logging
-        self.logger = get_logger(self.__class__.__name__, log_dir=os.path.join(company_dir, "logs"))
+        self.logger = get_logger(self.__class__.__name__, log_dir=os.path.join(agents_dir, "logs"))
 
     def start_execution(self, agent_id: str, task: str) -> str:
         """

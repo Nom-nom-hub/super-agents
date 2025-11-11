@@ -9,7 +9,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 import yaml
 
-from company.agent_support import AgentSupport
+from super_agents.agent_support import AgentSupport
 
 
 class TestAgentSupport:
@@ -29,7 +29,7 @@ class TestAgentSupport:
 
     def test_initialization(self):
         """Test AgentSupport initialization"""
-        assert self.agent_support.company_dir == self.temp_dir
+        assert self.agent_support.agents_dir == self.temp_dir
         assert hasattr(self.agent_support, 'registry_path')
         assert hasattr(self.agent_support, 'agents_dir')
         assert hasattr(self.agent_support, 'registry')

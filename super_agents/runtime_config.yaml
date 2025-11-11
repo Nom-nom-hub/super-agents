@@ -90,9 +90,9 @@ cognition:
 
 # Knowledge Management
 knowledge_index:
-  vector_db: /company/memory/vector_store/
+  vector_db: /super_agents/memory/vector_store/
   embeddings_model: openai/text-embedding-3-large
   sync_frequency: hourly
   shared_contexts: ["engineering/", "product/", "governance/"]
   compliance_domains: ["security", "privacy", "model_safety"]
-  audit_log: /company/audit_log/
+  audit_log: /super_agents/audit_log/

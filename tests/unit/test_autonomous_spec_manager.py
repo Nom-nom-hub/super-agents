@@ -9,7 +9,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 import yaml
 
-from company.autonomous_spec_manager import AutonomousSpecManager, SpecValidator
+from super_agents.core.autonomous_spec_manager import AutonomousSpecManager, SpecValidator
 
 
 class TestAutonomousSpecManager:
@@ -29,7 +29,7 @@ class TestAutonomousSpecManager:
 
     def test_initialization(self):
         """Test AutonomousSpecManager initialization"""
-        assert self.manager.company_dir == self.temp_dir
+        assert self.manager.agents_dir == self.temp_dir
         assert hasattr(self.manager, 'agents_dir')
         assert hasattr(self.manager, 'history_dir')
         assert os.path.exists(self.manager.history_dir)

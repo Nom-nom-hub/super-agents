@@ -10,7 +10,7 @@ The Context Management System ensures that all agents in AICODE Labs have access
 The context store is a shared repository that maintains information accessible to all agents:
 
 ```
-/company/context/
+/super_agents/context/
 ├── shared_memories/          # Shared knowledge accessible to all agents
 ├── project_contexts/         # Project-specific contexts
 ├── agent_memories/           # Individual agent memory snapshots
@@ -74,8 +74,8 @@ Different types of context providers supply relevant information to agents:
 Agents can request specific context information:
 
 ```
-@task backend_engineer Using project_context from /company/context/project_contexts/ecommerce_platform.json
-and architecture_decisions from /company/context/shared_memories/tech_architecture.md
+@task backend_engineer Using project_context from /super_agents/context/project_contexts/ecommerce_platform.json
+and architecture_decisions from /super_agents/context/shared_memories/tech_architecture.md
 implement user authentication API
 ```
 
@@ -192,8 +192,8 @@ Agents can retrieve context using standardized commands:
 @task [agent_type] Get context project=ecommerce_platform and execute [task]
 
 # Retrieve specific documents
-@task [agent_type] Using documents from /company/context/shared_memories/tech_standards.md
-and /company/context/project_contexts/ecommerce_platform/api_contracts.json
+@task [agent_type] Using documents from /super_agents/context/shared_memories/tech_standards.md
+and /super_agents/context/project_contexts/ecommerce_platform/api_contracts.json
 execute [task]
 
 # Retrieve agent-specific context

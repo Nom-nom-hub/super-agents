@@ -1,7 +1,7 @@
 [project]
 name = "super-agents"
 version = "2.0.0"
-description = "AICODE Labs - AI-native software development company composed of autonomous agents"
+description = "AICODE Labs - AI-native software development framework with autonomous agents"
 readme = "README.md"
 requires-python = ">=3.8"
 authors = [

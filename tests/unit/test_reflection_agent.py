@@ -9,7 +9,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 import yaml
 
-from company.reflection_agent import ReflectionAgent
+from super_agents.agents.reflection_agent import ReflectionAgent
 
 
 class TestReflectionAgent:
@@ -29,7 +29,7 @@ class TestReflectionAgent:
 
     def test_initialization(self):
         """Test ReflectionAgent initialization"""
-        assert self.agent.company_dir == self.temp_dir
+        assert self.agent.agents_dir == self.temp_dir
 
     def test_analyze_executions_empty(self):
         """Test analyzing executions when no executions are provided"""

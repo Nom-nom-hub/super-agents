@@ -213,7 +213,7 @@ Task → Agent.execute_task() → [No tracking] → [Spec never updates]
       │
       ├─ ExecutionTracker
       │  └─ End execution & save log
-      │     └─ company/agents/.execution_logs/exec_backend_engineer_*.json
+      │     └─ super_agents/agents/.execution_logs/exec_backend_engineer_*.json
       │
       ├─ ReflectionAgent
       │  ├─ Analyze execution patterns
@@ -393,7 +393,7 @@ diff = support.compare_spec_versions(agent_id, v1, v2)
 ## File Structure
 
 ```
-company/
+super_agents/
 ├── agents/
 │   ├── backend_engineer_agent.yaml      (current spec, auto-updated)
 │   ├── frontend_engineer_agent.yaml
@@ -475,7 +475,7 @@ learning.rollback_spec("backend_engineer", target_version=3)
 Reports are automatically saved after each execution:
 
 ```
-company/agents/.learning_reports/
+super_agents/agents/.learning_reports/
 └── backend_engineer_20250115_103000.md
 
 Learning Report: backend_engineer
@@ -577,7 +577,7 @@ Use `LearningIntegration` in:
 
 ### 3. Monitor Evolution
 
-Check `company/agents/.learning_reports/` for detailed analysis.
+Check `super_agents/agents/.learning_reports/` for detailed analysis.
 
 ### 4. Implement Approval Workflow
 
@@ -609,7 +609,7 @@ if not learning.is_available():
 ### Execution logs not appearing
 
 ```
-Check: company/agents/.execution_logs/
+Check: super_agents/agents/.execution_logs/
 Make sure ExecutionTracker has write permissions
 ```
 
@@ -698,7 +698,7 @@ if __name__ == "__main__":
 ## Support
 
 For issues or questions:
-1. Check execution logs in `company/agents/.execution_logs/`
-2. Review learning reports in `company/agents/.learning_reports/`
-3. Verify spec versions in `company/agents/.history/`
+1. Check execution logs in `super_agents/agents/.execution_logs/`
+2. Review learning reports in `super_agents/agents/.learning_reports/`
+3. Verify spec versions in `super_agents/agents/.history/`
 4. Check `intent_mapping.yaml` for specialization entries

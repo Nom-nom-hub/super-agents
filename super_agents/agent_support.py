@@ -16,17 +16,16 @@ from pathlib import Path
 class AgentSupport:
     """Handles multi-agent integration and command generation"""
 
-    def __init__(self, company_dir: str = "."):
+    def __init__(self, agents_dir: str = "."):
         """
         Initialize agent support system
 
         Args:
-            company_dir: Path to the company directory
+            agents_dir: Path to the agents directory
         """
-        self.company_dir = company_dir
-        self.registry_path = os.path.join(company_dir, "agent_registry.yaml")
-        self.agents_dir = os.path.join(company_dir, "agents")
-        self.templates_dir = os.path.join(company_dir, "templates")
+        self.agents_dir = os.path.join(agents_dir, "agents")  # The agents directory is the agents subdirectory
+        self.registry_path = os.path.join(agents_dir, "agent_registry.yaml")
+        self.templates_dir = os.path.join(agents_dir, "templates")
         self.registry = self._load_registry()
 
     def _load_registry(self) -> Dict:
@@ -793,7 +792,7 @@ Agents in the {division} division are responsible for:
 
         # Determine the agent-specific output directory (where command files go)
         if output_dir is None:
-            agent_output_dir = os.path.join(self.company_dir, config["folder"])
+            agent_output_dir = os.path.join(self.agents_dir, config["folder"])
         else:
             agent_output_dir = os.path.join(output_dir, config["folder"])
         os.makedirs(agent_output_dir, exist_ok=True)
@@ -1127,7 +1126,7 @@ As an agent in the {division} division, you are expected to:
         if not config:
             return False
 
-        output_dir = os.path.join(self.company_dir, config["folder"])
+        output_dir = os.path.join(self.agents_dir, config["folder"])
         os.makedirs(output_dir, exist_ok=True)
 
         agent_specs = self.load_agent_specs()

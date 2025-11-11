@@ -24,11 +24,11 @@ import yaml
 class AutonomousSpecManager:
     """Manages autonomous spec regeneration and versioning"""
 
-    def __init__(self, company_dir: str = "."):
-        self.company_dir = company_dir
-        self.agents_dir = os.path.join(company_dir, "agents")
-        self.history_dir = os.path.join(self.agents_dir, ".history")
-        self.intent_mapping_path = os.path.join(company_dir, "intent_mapping.yaml")
+    def __init__(self, agents_dir: str = "."):
+        self.agents_dir = agents_dir
+        self.agents_subdir = os.path.join(agents_dir, "agents")
+        self.history_dir = os.path.join(self.agents_subdir, ".history")
+        self.intent_mapping_path = os.path.join(agents_dir, "intent_mapping.yaml")
 
         # Ensure directories exist
         Path(self.history_dir).mkdir(parents=True, exist_ok=True)

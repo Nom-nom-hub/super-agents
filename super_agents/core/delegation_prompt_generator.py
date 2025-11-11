@@ -19,10 +19,10 @@ import yaml
 class DelegationPromptGenerator:
     """Generates intelligent delegation prompts for external AI agents"""
 
-    def __init__(self, company_dir: str = "."):
-        self.company_dir = company_dir
-        self.intent_mapping_path = os.path.join(company_dir, "intent_mapping.yaml")
-        self.agents_dir = os.path.join(company_dir, "agents")
+    def __init__(self, agents_dir: str = "."):
+        self.agents_dir = agents_dir
+        self.intent_mapping_path = os.path.join(agents_dir, "intent_mapping.yaml")
+        self.agents_subdir = os.path.join(agents_dir, "agents")
         self.intent_mapping = self._load_intent_mapping()
         self.agent_specs = self._load_agent_specs()
 
@@ -408,7 +408,7 @@ This workflow is automatically used when user requests include:
 
 def main():
     """Example usage"""
-    generator = DelegationPromptGenerator("/Users/teck/Desktop/super-agents/company")
+    generator = DelegationPromptGenerator("/Users/teck/Desktop/super-agents/super_agents")
 
     # Generate universal prompt
     prompt = generator.generate_delegation_system_prompt("markdown")

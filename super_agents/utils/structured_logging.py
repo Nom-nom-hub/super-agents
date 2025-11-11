@@ -22,7 +22,7 @@ class StructuredLogger:
         
         Args:
             name: Name of the logger (usually agent id)
-            log_dir: Directory to store logs (default: company/logs/)
+            log_dir: Directory to store logs (default: super_agents/logs/)
             level: Logging level
         """
         self.name = name

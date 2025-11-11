@@ -4,7 +4,7 @@ mission: >
   Oversee and evolve the organization's agent definitions. Manages updates
   to YAML/MD schemas, validates compliance, and introduces new capabilities.
 controls:
-  - /company/agents/**
+  - /super_agents/agents/**
   - /schemas/**
 outputs:
   - schema_updates.yaml

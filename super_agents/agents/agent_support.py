@@ -45,14 +45,14 @@ except ImportError:
 class AgentSupport:
     """Handles multi-agent integration and command generation"""
 
-    def __init__(self, company_dir: str = "."):
+    def __init__(self, agents_dir: str = "."):
         """
         Initialize agent support system
 
         Args:
-            company_dir: Path to the directory for output files. Registry and agent specs are loaded from the package.
+            agents_dir: Path to the directory for output files. Registry and agent specs are loaded from the package.
         """
-        self.company_dir = company_dir
+        self.agents_dir = agents_dir
 
         # For installed tools, registry and agents should be loaded from the package location
 
@@ -61,24 +61,24 @@ class AgentSupport:
         if os.path.exists(os.path.join(package_dir, "agent_registry.yaml")):
             # Running from development directory
             self.registry_path = os.path.join(package_dir, "agent_registry.yaml")
-            self.agents_dir = os.path.join(package_dir, "agents")
+            self.agents_subdir = os.path.join(package_dir, "agents")
             self.templates_dir = os.path.join(package_dir, "templates")
         else:
-            # This should not happen with proper setup, but as fallback try company_dir
-            self.registry_path = os.path.join(company_dir, "agent_registry.yaml")
-            self.agents_dir = os.path.join(company_dir, "agents")
-            self.templates_dir = os.path.join(company_dir, "templates")
+            # This should not happen with proper setup, but as fallback try agents_dir
+            self.registry_path = os.path.join(agents_dir, "agent_registry.yaml")
+            self.agents_subdir = os.path.join(agents_dir, "agents")
+            self.templates_dir = os.path.join(agents_dir, "templates")
 
         self.registry = self._load_registry()
 
         # Initialize structured logging
-        self.logger = get_logger(self.__class__.__name__, log_dir=os.path.join(company_dir, "logs"))
+        self.logger = get_logger(self.__class__.__name__, log_dir=os.path.join(agents_dir, "logs"))
 
         # Initialize delegation prompt generator if available
         self.delegation_generator = None
         if HAS_DELEGATION_GENERATOR:
             try:
-                self.delegation_generator = DelegationPromptGenerator(company_dir)
+                self.delegation_generator = DelegationPromptGenerator(agents_dir)
             except Exception as e:
                 print(f"⚠ Could not initialize delegation generator: {e}")
 
@@ -89,9 +89,9 @@ class AgentSupport:
 
         if HAS_SPEC_REGENERATION:
             try:
-                self.execution_tracker = ExecutionTracker(company_dir)
-                self.reflection_agent = ReflectionAgent(company_dir)
-                self.spec_manager = AutonomousSpecManager(company_dir)
+                self.execution_tracker = ExecutionTracker(agents_dir)
+                self.reflection_agent = ReflectionAgent(agents_dir)
+                self.spec_manager = AutonomousSpecManager(agents_dir)
             except Exception as e:
                 print(f"⚠ Could not initialize spec regeneration: {e}")
 
@@ -178,7 +178,7 @@ class AgentSupport:
 
         # Determine output directory
         if output_dir is None:
-            output_dir = os.path.join(self.company_dir, config["folder"])
+            output_dir = os.path.join(self.agents_dir, config["folder"])
         else:
             output_dir = os.path.join(output_dir, config["folder"])
 
@@ -596,7 +596,7 @@ Available agents:
         including project context, agent specs, and other necessary resources
         """
         config = self.get_agent_config(agent_id)
-        output_dir = os.path.join(self.company_dir, config["folder"])
+        output_dir = os.path.join(self.agents_dir, config["folder"])
         os.makedirs(output_dir, exist_ok=True)
 
         # Load super-agent specs
@@ -959,7 +959,7 @@ As an agent in the {division} division, you are expected to:
         if not config:
             return False
 
-        output_dir = os.path.join(self.company_dir, config["folder"])
+        output_dir = os.path.join(self.agents_dir, config["folder"])
         os.makedirs(output_dir, exist_ok=True)
 
         agent_specs = self.load_agent_specs()
@@ -1101,7 +1101,7 @@ As an agent in the {division} division, you are expected to:
 
             # Determine output directory
             if output_dir is None:
-                output_dir = os.path.join(self.company_dir, config["folder"])
+                output_dir = os.path.join(self.agents_dir, config["folder"])
             else:
                 output_dir = os.path.join(output_dir, config["folder"])
 

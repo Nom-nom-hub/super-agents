@@ -11,18 +11,18 @@ setup(
     version="2.0.0",
     author="AICODE Labs",
     author_email="info@aicode-labs.com",
-    description="AICODE Labs - AI-native software development company composed of autonomous agents",
+    description="AICODE Labs - AI-native software development framework with autonomous agents",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Nom-nom-hub/super-agents",
-    packages=find_packages(include=['company', 'company.*']),
+    packages=find_packages(include=['super_agents', 'super_agents.*']),
     package_data={
-        'company': ['agent_registry.yaml', 'agents/*.yaml', 'agents/*.md', 'scripts/*.sh', 'scripts/*.ps1'],
+        'super_agents': ['agent_registry.yaml', 'agents/*.yaml', 'agents/*.md', 'scripts/*.sh', 'scripts/*.ps1'],
     },
     install_requires=requirements,
     entry_points={
         'console_scripts': [
-            'aicode=company.cli:cli',
+            'aicode=super_agents.cli.main:cli',
         ],
     },
     classifiers=[

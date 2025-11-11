@@ -10,7 +10,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 import yaml
 
-from company.execution_tracker import ExecutionTracker
+from super_agents.core.execution_tracker import ExecutionTracker
 
 
 class TestExecutionTracker:
@@ -30,7 +30,7 @@ class TestExecutionTracker:
 
     def test_initialization(self):
         """Test ExecutionTracker initialization"""
-        assert self.tracker.company_dir == self.temp_dir
+        assert self.tracker.agents_dir == self.temp_dir
         assert hasattr(self.tracker, 'execution_logs_dir')
         # Verify execution logs directory was created
         assert os.path.exists(self.tracker.execution_logs_dir)

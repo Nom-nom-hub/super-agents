@@ -13,7 +13,7 @@ This module can be used by:
 - REST API handlers
 
 Usage:
-    learning = LearningIntegration(company_dir)
+    learning = LearningIntegration(agents_dir)
 
     # Pre-execution
     exec_id = learning.pre_execute(agent_id, task_description)
@@ -42,20 +42,20 @@ except ImportError:
 class LearningIntegration:
     """Integration point for autonomous learning in agent execution"""
 
-    def __init__(self, company_dir: str = "."):
+    def __init__(self, agents_dir: str = "."):
         """
         Initialize learning integration
 
         Args:
-            company_dir: Path to company directory
+            agents_dir: Path to agents directory
         """
-        self.company_dir = company_dir
+        self.agents_dir = agents_dir
         self.agent_support = None
         self.current_exec_id = None
 
         if HAS_AGENT_SUPPORT:
             try:
-                self.agent_support = AgentSupport(company_dir)
+                self.agent_support = AgentSupport(agents_dir)
             except Exception as e:
                 print(f"⚠ Learning integration unavailable: {e}")
 
@@ -321,7 +321,7 @@ class LearningIntegration:
 
 
 def execute_with_learning(
-    company_dir: str, agent_id: str, task_description: str, task_func, *args, **kwargs
+    agents_dir: str, agent_id: str, task_description: str, task_func, *args, **kwargs
 ) -> tuple:
     """
     Convenience function to execute a task with automatic learning tracking
@@ -329,7 +329,7 @@ def execute_with_learning(
     This wraps a task function with pre/post execution hooks.
 
     Args:
-        company_dir: Path to company directory
+        agents_dir: Path to agents directory
         agent_id: Agent executing the task
         task_description: Task description
         task_func: Function to execute
@@ -345,7 +345,7 @@ def execute_with_learning(
             return "result"
 
         result, learning = execute_with_learning(
-            "./company",
+            "./super_agents",
             "backend_engineer",
             "Design API",
             my_task,
@@ -353,7 +353,7 @@ def execute_with_learning(
             param2="value2"
         )
     """
-    learning = LearningIntegration(company_dir)
+    learning = LearningIntegration(agents_dir)
 
     # Pre-execution
     learning.pre_execute(agent_id, task_description)
