@@ -36,11 +36,11 @@ class DelegationPromptGenerator:
     def _load_agent_specs(self) -> Dict[str, Dict]:
         """Load all agent specifications"""
         specs = {}
-        if os.path.exists(self.agents_dir):
-            for filename in os.listdir(self.agents_dir):
+        if os.path.exists(self.agents_subdir):
+            for filename in os.listdir(self.agents_subdir):
                 if filename.endswith("_agent.yaml"):
                     agent_id = filename.replace("_agent.yaml", "")
-                    filepath = os.path.join(self.agents_dir, filename)
+                    filepath = os.path.join(self.agents_subdir, filename)
                     with open(filepath, "r") as f:
                         spec = yaml.safe_load(f)
                         specs[agent_id] = spec

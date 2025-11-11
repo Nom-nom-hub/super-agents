@@ -29,7 +29,8 @@ class TestAgentSupport:
 
     def test_initialization(self):
         """Test AgentSupport initialization"""
-        assert self.agent_support.agents_dir == self.temp_dir
+        # agents_dir should be the agents subdirectory of the passed directory
+        assert self.agent_support.agents_dir == os.path.join(self.temp_dir, "agents")
         assert hasattr(self.agent_support, 'registry_path')
         assert hasattr(self.agent_support, 'agents_dir')
         assert hasattr(self.agent_support, 'registry')

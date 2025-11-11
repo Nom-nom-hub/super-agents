@@ -35,7 +35,7 @@ class AutonomousSpecManager:
 
     def load_agent_spec(self, agent_id: str) -> Dict:
         """Load current agent spec"""
-        spec_path = os.path.join(self.agents_dir, f"{agent_id}_agent.yaml")
+        spec_path = os.path.join(self.agents_subdir, f"{agent_id}_agent.yaml")
 
         if not os.path.exists(spec_path):
             return {}
@@ -60,7 +60,7 @@ class AutonomousSpecManager:
                 print(f"❌ Spec validation failed for {agent_id}")
                 return False
 
-        spec_path = os.path.join(self.agents_dir, f"{agent_id}_agent.yaml")
+        spec_path = os.path.join(self.agents_subdir, f"{agent_id}_agent.yaml")
 
         with open(spec_path, "w") as f:
             yaml.dump(spec, f, default_flow_style=False, sort_keys=False)

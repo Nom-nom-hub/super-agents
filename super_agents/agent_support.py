@@ -21,11 +21,9 @@ class AgentSupport:
         Initialize agent support system
 
         Args:
-            agents_dir: Path to the agents directory
+            agents_dir: Path to the root directory that contains the agents subdirectory
         """
-        self.agents_dir = os.path.join(
-            agents_dir, "agents"
-        )  # The agents directory is the agents subdirectory
+        self.agents_dir = os.path.join(agents_dir, "agents")
         self.registry_path = os.path.join(agents_dir, "agent_registry.yaml")
         self.templates_dir = os.path.join(agents_dir, "templates")
         self.registry = self._load_registry()
@@ -33,12 +31,14 @@ class AgentSupport:
     def _load_registry(self) -> Dict:
         """Load agent registry from YAML"""
         if not os.path.exists(self.registry_path):
-            raise FileNotFoundError(f"Agent registry not found at {self.registry_path}")
+            # Return an empty registry instead of raising an exception
+            # This allows the class to function even without a registry file
+            return {"agents": {}}
 
         with open(self.registry_path, "r") as f:
             data = yaml.safe_load(f)
 
-        return data or {}
+        return data or {"agents": {}}
 
     def get_agent_config(self, agent_id: str) -> Optional[Dict]:
         """Get configuration for a specific agent"""
@@ -1190,7 +1190,7 @@ As an agent in the {division} division, you are expected to:
         if not config:
             return False
 
-        output_dir = os.path.join(self.agents_dir, config["folder"])
+        output_dir = os.path.join(os.path.dirname(self.agents_dir), config["folder"])
         os.makedirs(output_dir, exist_ok=True)
 
         agent_specs = self.load_agent_specs()
