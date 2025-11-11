@@ -138,13 +138,9 @@ class SuperAgentsUI:
             self.console.print(Text("  Use ↑/↓ to navigate, Enter to select, Ctrl+C to cancel", style="dim"))
 
             # Get user input
+            # Check platform first without try-except to avoid the termios import error
             if sys.platform == "win32":
                 # Windows doesn't support arrow keys easily
-                return self._fallback_menu(items)
-            
-            # Check if stdin is a TTY before attempting termios operations
-            if not sys.stdin.isatty():
-                # Not running in a TTY environment (like piped input)
                 return self._fallback_menu(items)
 
             try:
